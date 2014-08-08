@@ -6,7 +6,7 @@ root = '/usr/local/kit'
 modules = root + '/modules'
 headers = root + '/headers'
 module_list = modules + '/list.csv'
-remote_index_url = 'https://raw.githubusercontent.com/dasmithii/Kit/master/MODULES.csv'
+remote_index_url = 'https://raw.github.com/dasmithii/Kit/master/MODULES.csv'
 
 
 def ready():
@@ -24,7 +24,8 @@ def ensure_ready():
 		setup()
 
 def module_tuple(line):
-	return line.split(',')[0:2]
+	parts = map(str.strip, line.split(','))
+	return tuple(parts[0:2])
 
 def local_modules():
 	with open(module_list, 'r') as f:
@@ -39,6 +40,11 @@ def remote_modules():
 	except:
 		print " > failed to retrieve module index."
 		return []
+
+def remote_resolve(name):
+	mods = filter(lambda t: t[0] == name, remote_modules())[0]
+	if len(mods) > 0:
+		return mods[1]
 
 def module_path(name):
 	return modules + '/' + name
