@@ -73,7 +73,6 @@ def unindex(name):
 
 
 
-
 def contains_module(name):
 	return os.path.exists(module_path(name))
 
