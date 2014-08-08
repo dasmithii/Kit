@@ -1,23 +1,25 @@
 import os
 import urllib
+import shutil
 from utility import *
 
-root = '/usr/local/kit'
-modules = root + '/modules'
-headers = root + '/headers'
+modules = '/usr/local/kit'
 module_list = modules + '/list.csv'
 remote_index_url = 'https://raw.github.com/dasmithii/Kit/master/MODULES.csv'
 
 
 def ready():
-	return os.path.exists(root)
+	return os.path.exists(modules)
+
+def clear():
+	if ready():
+		shutil.rmtree(modules)
 
 def setup():
-	os.makedirs(root)
+	clear()
 	os.makedirs(modules)
-	os.makedirs(headers)
 	with open(module_list, 'w+') as f:
-		f.write('base, https://github.com/dasmithii/BaseKit')
+		f.write('')
 
 def ensure_ready():
 	if not ready():
@@ -27,16 +29,19 @@ def module_tuple(line):
 	parts = map(str.strip, line.split(','))
 	return tuple(parts[0:2])
 
+def module_tuples(text):
+	lines = filter(None, text.split('\n'))
+	return map(module_tuple, lines)
+
 def local_modules():
+	ensure_ready()
 	with open(module_list, 'r') as f:
-		lines = f.read().split('\n')
-		return map(module_tuple, lines)
+		return module_tuples(f.read())
 
 def remote_modules():
 	try:
 		index = urllib.urlopen(remote_index_url)
-		lines = index.read().split('\n')
-		return map(module_tuple, lines)
+		return module_tuples(index.read())
 	except:
 		print " > failed to retrieve module index."
 		return []
