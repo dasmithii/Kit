@@ -87,7 +87,7 @@ def fetch_module(name):
 	if not url:
 		logging.error("failed to fetch module " + name)
 	else:
-		os.system('git clone ' + url + '.git ' + modules + '/' + name)
+		os.system('git clone ' + url + ' ' + modules + '/' + name)
 		index(name, url)
 
 
