@@ -1,6 +1,7 @@
 import os
 import urllib
 import shutil
+import logging
 from utility import *
 
 modules = '/usr/local/kit'
@@ -43,13 +44,14 @@ def remote_modules():
 		index = urllib.urlopen(remote_index_url)
 		return module_tuples(index.read())
 	except:
-		print " > failed to retrieve module index."
+		logging.info("failed to retrieve module index")
 		return []
 
 def remote_resolve(name):
 	mods = filter(lambda t: t[0] == name, remote_modules())[0]
 	if len(mods) > 0:
 		return mods[1]
+	logging.info("couldn't resolve module with name " + name)
 
 def module_path(name):
 	return modules + '/' + name
@@ -59,4 +61,34 @@ def module_source_path(name):
 
 def module_sources(name):
 	return sources_under(module_path(name))
+
+def index(name):
+	with open(module_list, 'w+') as f:
+		f.write('\n' + name + ', ' + url)
+
+def unindex(name):
+	mods = filter(lambda t: t[0] != name, local_modules())
+	with open(module_list, 'w') as f:
+		f.writelines(map(', '.join, mods)) 
+
+
+
+
+def contains_module(name):
+	return os.path.exists(module_path(name))
+
+def clear_module(name):
+	if contains_module(name):
+		shutil.rmtree(module_path(name))
+		unindex(name)
+
+def fetch_module(name):
+	clear_module(name)
+	url = remote_resolve(name)
+	if not url:
+		logging.error("failed to fetch module " + name)
+	else:
+		os.system('git clone ' + url + '.git ' + modules + '/' + name)
+		index(name)
+
 
