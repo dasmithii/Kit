@@ -62,7 +62,7 @@ def module_source_path(name):
 def module_sources(name):
 	return sources_under(module_path(name))
 
-def index(name):
+def index(name, url):
 	with open(module_list, 'w+') as f:
 		f.write('\n' + name + ', ' + url)
 
@@ -88,6 +88,6 @@ def fetch_module(name):
 		logging.error("failed to fetch module " + name)
 	else:
 		os.system('git clone ' + url + '.git ' + modules + '/' + name)
-		index(name)
+		index(name, url)
 
 
