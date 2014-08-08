@@ -1,12 +1,12 @@
 import os
-import urlib.request
+import urllib
 from utility import *
 
 root = '/usr/local/kit'
 modules = root + '/modules'
 headers = root + '/headers'
 module_list = modules + '/list.csv'
-remote_index_url = 'https://raw.githubusercontent.com/dasmithii/Kit/master/modules.csv'
+remote_index_url = 'https://raw.githubusercontent.com/dasmithii/Kit/master/MODULES.csv'
 
 
 def ready():
@@ -24,8 +24,7 @@ def ensure_ready():
 		setup()
 
 def module_tuple(line):
-	s = line.split(',')
-	return (parts[0], parts[1].lstrip())
+	return line.split(',')[0:2]
 
 def local_modules():
 	with open(module_list, 'r') as f:
@@ -34,11 +33,11 @@ def local_modules():
 
 def remote_modules():
 	try:
-		index = urllib.request.urlopen(remote_index_url)
+		index = urllib.urlopen(remote_index_url)
 		lines = index.read().split('\n')
 		return map(module_tuple, lines)
-	except e:
-		print "couldn't "
+	except:
+		print " > failed to retrieve module index."
 		return []
 
 def module_path(name):
