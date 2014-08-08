@@ -1,2 +1,4 @@
+import storage
+
 def run_cli():
-	print "Hey!"
+	print 'yo'
