@@ -14,6 +14,9 @@ def dist(context):
 def fetch(context):
 	storage.fetch_module(context.name)
 
+def remove(context):
+	storage.clear_module(context.name)
+
 def init(context):
 	print 'TODO'
 
