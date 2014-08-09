@@ -38,7 +38,7 @@ def ready_indexed_module(name):
 # compilation.
 def generate_cmake(path, refs):
 	name = path.split('/')[-1]
-	with open(path + '/CMakeLists.txt') as f
+	with open(path + '/CMakeLists.txt') as f:
 		f.write('project KitModule C\n')
 		f.write('cmake_minimum_required (VERSION 2.6)\n')
 		f.write('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
@@ -56,7 +56,7 @@ def generate_cmake(path, refs):
 			f.write('add_library(' + name + '_shared SHARED ${sources})\n')
 			f.write('add_executable(tests ${sources} ${test_sources})\n')
 		for ref in refs:
-			f.write('add_library(' + ref + ' SHARED IMPORTED)\n'
+			f.write('add_library(' + ref + ' SHARED IMPORTED)\n')
 			f.write('set_target_properties(' + ref + ' PROPERTIES IMPORTED_LOCATION ' + storage.module_path(ref) + ')\n')
 			f.write('TARGET_LINK_LIBRARIES(' + name + ' ' + ref + ')\n')
 			f.write('TARGET_LINK_LIBRARIES(' + name + '_shared ' + ref + ')\n')
@@ -84,7 +84,3 @@ def build_directory(path):
 		ready_module(name)
 	generate_cmake(path, refs)
 	make(path)
-
-# Applies to current directory.
-def build():
-	build_directory('.')

@@ -1,4 +1,0 @@
-author: >>>name<<<
-repository: >>>repo<<<
-libraries:
-executables: sources, tests

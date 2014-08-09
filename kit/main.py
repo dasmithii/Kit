@@ -15,6 +15,7 @@ subs.add_parser('register', help='include project in system-wide directory')
 subs.add_parser('run', help='compile and run executable')
 
 
+
 def run_cli():
 	args = sys.argv[1:]
 	context = parser.parse_args(args)
