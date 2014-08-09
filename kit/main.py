@@ -14,12 +14,15 @@ subs.add_parser('install', help='install project globally')
 subs.add_parser('modules', help='list available modules')
 subs.add_parser('register', help='include project in system-wide directory')
 subs.add_parser('run', help='compile and run executable')
+subs.add_parser('test', help='run tests for given module, defaulting to current')
 
 
 
 def run_cli():
 	args = sys.argv[1:]
 	context = parser.parse_args(args)
+	if context.command == 'run':
+		context.args = [sys.argv[0]] + args[1:]
 	commands.execute(context)
 
 if __name__ == '__main__':

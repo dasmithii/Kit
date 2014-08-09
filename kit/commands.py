@@ -39,9 +39,15 @@ def register(context):
 	print 'TODO'
 
 def run(context):
-	build()
+	build(None)
 	name = os.getcwd().split('/')[-1]
 	os.execv('build/bin/' + name, context.args)
+
+def test(context):
+	build(None)
+	os.execv('build/bin/tests', [''])
+
+
 
 def execute(context):
 	globals()[context.command](context)

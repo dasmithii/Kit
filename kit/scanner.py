@@ -19,7 +19,6 @@ def extract_name(s):
 	return s[s.find('kit/') + 4 : s.find('>')]
 
 
-
 # Extracts included kit module names.
 def text_references(text):
 	lines = text.split('\n')
@@ -36,7 +35,7 @@ def file_references(path):
 def directory_references(root):
 	refs = Set()
 	for path in sources_under(root):
-		refs += file_references(path)
+		refs = refs & file_references(path)
 	return refs
 
 def module_references(name):
@@ -47,7 +46,7 @@ def directory_dependencies(path):
 	deps = directory_references(path)
 	while True:
 		prev = deps
-		deps = reduce(operator.add, map(module_references, deps))
+		deps = reduce(operator.and_, map(module_references, deps))
 		if len(prev) == len(deps):
 			return deps
 

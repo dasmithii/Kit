@@ -1,8 +1,11 @@
-# Lists paths to all files within.
+import os
+
 def files_under(directory):
 	ret = []
 	for root, dirs, files in os.walk(directory):
 		for path in files:
+			path = root + '/' + '/'.join(dirs) + '/' + path
+			path = path.replace('//', '/')
 			ret.append(path)
 	return ret
 

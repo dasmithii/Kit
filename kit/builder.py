@@ -37,13 +37,13 @@ def ready_indexed_module(name):
 # Generates CMakeLists file for project. This should be removed after
 # compilation.
 def generate_cmake(path, refs):
-	name = path.split('/')[-1]
-	with open(path + '/CMakeLists.txt') as f:
-		f.write('project KitModule C\n')
-		f.write('cmake_minimum_required (VERSION 2.6)\n')
+	name = os.path.abspath(path).split('/')[-1]
+	with open(path + '/CMakeLists.txt', 'w') as f:
+		f.write('project(KitModule C)\n')
+		f.write('cmake_minimum_required(VERSION 2.6)\n')
 		f.write('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
-		f.write('CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin\n')
-		f.write('CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin\n')
+		f.write('set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
+		f.write('set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
 		f.write('SET(CMAKE_C_FLAGS  "-g -Wall -O2")\n')
 		f.write('file(GLOB_RECURSE sources "sources/*.c")\n')
 		f.write('file(GLOB_RECURSE test_sources "tests/*.c")\n')
