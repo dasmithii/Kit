@@ -5,6 +5,7 @@ import logging
 from utility import *
 
 modules = '/usr/local/kit'
+headers = modules + '/headers'
 module_list = modules + '/list.csv'
 remote_index_url = 'https://raw.github.com/dasmithii/Kit/master/MODULES.csv'
 
@@ -19,6 +20,8 @@ def clear():
 def setup():
 	clear()
 	os.makedirs(modules)
+	os.makedirs(modules + '/' + 'headers')
+	os.makedirs(modules + '/' + 'headers/kit')
 	with open(module_list, 'w+') as f:
 		f.write('')
 
