@@ -15,15 +15,16 @@ def has_kit(s):
 def is_dependency(s):
 	return has_pound(s) and has_kit(s)
 
-def extract_name(s):
+def extract_reference(s):
 	return s[s.find('kit/') + 4 : s.find('>')]
 
 
-# Extracts included kit module names.
+# Extracts paths included in format: #include <kit/module/file.h>, which
+# becomes "module/file.h".
 def text_references(text):
 	lines = text.split('\n')
 	includes = filter(is_dependency, lines)
-	return Set(map(extract_name, includes))
+	return Set(map(extract_reference, includes))
 
 # Wrapper for above.
 def file_references(path):
@@ -35,21 +36,28 @@ def file_references(path):
 def directory_references(root):
 	refs = Set()
 	for path in sources_under(root):
-		refs = refs & file_references(path)
+		refs |= file_references(path)
 	return refs
 
+# Wrapper for above, but with a locally indexed module.
 def module_references(name):
 	path = storage.module_path(name)
 	return directory_references(path)
 
-def directory_dependencies(path):
-	deps = directory_references(path)
-	while True:
-		prev = deps
-		deps = reduce(operator.and_, map(module_references, deps))
-		if len(prev) == len(deps):
-			return deps
+# Given references to files in the Kit module index, returns
+# a set of required modules.
+def extract_dependencies(refs):
+	ret = Set()
+	for ref in refs:
+		ret.add(ref.split('/')[0])
+	return ret
 
+# Shallow dependencies of kit project with root path.
+def directory_dependencies(path):
+	refs = directory_references(path)
+	return extract_dependencies(refs)
+
+# Shallow dependencies of kit module in index with name.
 def module_dependencies(name):
 	path = storage.module_path(name)
 	return directory_dependencies(path)
