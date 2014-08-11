@@ -46,7 +46,7 @@ def module_references(name):
 
 # Given references to files in the Kit module index, returns
 # a set of required modules.
-def extract_dependencies(refs):
+def deps_from_references(refs):
 	ret = Set()
 	for ref in refs:
 		ret.add(ref.split('/')[0])
@@ -55,7 +55,7 @@ def extract_dependencies(refs):
 # Shallow dependencies of kit project with root path.
 def directory_dependencies(path):
 	refs = directory_references(path)
-	return extract_dependencies(refs)
+	return deps_from_references(refs)
 
 # Shallow dependencies of kit module in index with name.
 def module_dependencies(name):

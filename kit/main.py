@@ -6,6 +6,7 @@ parser = argparse.ArgumentParser()
 subs = parser.add_subparsers(dest='command')
 
 subs.add_parser('build', help='compile executable/library')
+subs.add_parser('clean', help='erase build products')
 subs.add_parser('dist', help='generate C project without dependencies on kit')
 subs.add_parser('fetch', help='download module from central index').add_argument('name', action='store')
 subs.add_parser('remove', help='deletes module from local index').add_argument('name', action='store')

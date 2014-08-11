@@ -18,5 +18,4 @@ def headers_under(directory):
 	return filter(lambda x: x.endswith('.h'), files)
 
 def touch(path):
-	with open(path, 'w') as f:
-		f.write('')
+	os.system('touch ' + path)

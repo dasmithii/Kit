@@ -4,6 +4,8 @@ import utility
 import storage
 import builder
 
+def clean(context):
+	shutil.rmtree('build', ignore_errors=True)
 
 def build(context):
 	builder.build_directory('.')
