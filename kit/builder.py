@@ -59,14 +59,14 @@ def generate_cmake(path, deps):
 			f.write('list(REMOVE_ITEM test_sources2 "${PROJECT_SOURCE_DIR}/sources/main.c")\n')
 			f.write('add_executable(tests ${test_sources2} ${headers})\n')
 		else:
-			f.write('add_library(' + name + '_shared SHARED ${sources} ${headers})\n')
+			f.write('add_library(' + name + ' ${sources} ${headers})\n')
 			f.write('add_executable(tests ${sources} ${test_sources} ${headers})\n')
 		for dep in deps:
 			f.write('add_library(' + dep + ' SHARED IMPORTED)\n')
-			f.write('set_target_properties(' + dep + ' PROPERTIES IMPORTED_LOCATION ' + storage.module_path(dep) + ')\n')
+			f.write('set_target_properties(' + dep + ' PROPERTIES IMPORTED_LOCATION "' + storage.module_library_path(dep) + '")\n')
 			f.write('TARGET_LINK_LIBRARIES(tests ' + dep + ')\n')
 			f.write('TARGET_LINK_LIBRARIES(' + name + ' ' + dep + ')\n')
-			f.write('include_directories(' + storage.modules + '/' + dep + '/build/headers' + ')\n')
+			f.write('include_directories(' + storage.module_header_path(dep) + ')\n')
 
 
 
@@ -80,7 +80,7 @@ def make(path):
 	os.chdir('build')
 	os.system('cmake -Wno-dev .. > /dev/null')
 	os.system('make > /dev/null')
-	# os.system('rm ../CMakeLists.txt')
+	os.system('rm ../CMakeLists.txt')
 	os.chdir(wd)
 
 	

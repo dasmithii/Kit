@@ -65,6 +65,10 @@ def module_header_path(name):
 def module_source_path(name):
 	return module_path(name) + '/sources'
 
+def module_library_path(name):
+	base = module_path(name) + '/build/bin/lib' + name
+	return base + '.so'
+
 def module_sources(name):
 	return sources_under(module_path(name))
 
