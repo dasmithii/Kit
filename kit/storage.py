@@ -59,6 +59,9 @@ def remote_resolve(name):
 def module_path(name):
 	return modules + '/' + name
 
+def module_header_path(name):
+	return module_path(name) + '/build/headers'
+
 def module_source_path(name):
 	return module_path(name) + '/sources'
 
