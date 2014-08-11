@@ -67,7 +67,7 @@ def module_source_path(name):
 
 def module_library_path(name):
 	base = module_path(name) + '/build/bin/lib' + name
-	return base + '.so'
+	return base + '.a'
 
 def module_sources(name):
 	return sources_under(module_path(name))

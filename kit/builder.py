@@ -59,7 +59,7 @@ def generate_cmake(path, deps):
 			f.write('list(REMOVE_ITEM test_sources2 "${PROJECT_SOURCE_DIR}/sources/main.c")\n')
 			f.write('add_executable(tests ${test_sources2} ${headers})\n')
 		else:
-			f.write('add_library(' + name + ' ${sources} ${headers})\n')
+			f.write('add_library(' + name + ' STATIC ${sources} ${headers})\n')
 			f.write('add_executable(tests ${sources} ${test_sources} ${headers})\n')
 		for dep in deps:
 			f.write('add_library(' + dep + ' SHARED IMPORTED)\n')
