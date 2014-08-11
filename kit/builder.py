@@ -47,12 +47,15 @@ def generate_cmake(path, refs):
 		f.write('SET(CMAKE_C_FLAGS  "-g -Wall -O2")\n')
 		f.write('file(GLOB_RECURSE sources "sources/*.c")\n')
 		f.write('file(GLOB_RECURSE test_sources "tests/*.c")\n')
-		if os.path.exists(path + '/sources/main.c\n'):
+		print "PATH: ", path
+		if os.path.exists(path + '/sources/main.c'):
+			print "ONE"
 			f.write('add_executable(' + name + ' ${sources})\n')
-			f.write('set(tests2 ${sources} ${test_sources})\n')
-			f.write('list(REMOVE_ITEM test_sources2 ' + path + '/sources/main.c\n')
-			f.write('add_executable(tests ${sources} ${test_sources2})\n')
+			f.write('set(test_sources2 ${sources} ${test_sources})\n')
+			f.write('list(REMOVE_ITEM test_sources2 "${PROJECT_SOURCE_DIR}/sources/main.c")\n')
+			f.write('add_executable(tests ${test_sources2})\n')
 		else:
+			print "TWO"
 			f.write('add_library(' + name + '_shared SHARED ${sources})\n')
 			f.write('add_executable(tests ${sources} ${test_sources})\n')
 		for ref in refs:

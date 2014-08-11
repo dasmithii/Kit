@@ -16,3 +16,7 @@ def sources_under(directory):
 def headers_under(directory):
 	files = files_under(directory)
 	return filter(lambda x: x.endswith('.h'), files)
+
+def touch(path):
+	with open(path, 'w') as f:
+		f.write('')
