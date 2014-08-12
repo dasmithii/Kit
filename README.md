@@ -1,9 +1,3 @@
-## Status
-Not ready for primetime, but it's getting there.
-
-
-
-
 ## Overview
 In contrast with many modern languages, C has no central authority of project management. From basic directory structure to build tools, everything seems fragmented. More so, libraries are inaccessibly scattered across the web - and that pressures developers to reinvent the wheel over and over again.
 
@@ -22,7 +16,7 @@ cd ..
 
 
 ## Sample Usage
-1. Set a project.
++ Set a project.
     ```
     mkdir my-project
     cd my-project
@@ -33,7 +27,7 @@ cd ..
     + `kit run` is a shortcut for `./build/bin/my-project
     + `kit test` is a shortcut for `./build/bin/tests
 
-2. Include modules from the centralized index.
++ Include modules from the centralized index.
     
     ```
     // file: sources/main.c
@@ -48,17 +42,11 @@ cd ..
     ```
     Kit recognizes `#include <kit/base*` and searches for a module named "base". If not installed already, it is downloaded from the central index and compiled as a static archive. Then, during `kit build`, the library is linked against and its headers added to the include path.
     
-3. Create your own modules.
++ Create your own modules.
     
-    After developing a library, you may want access to it from other projects. To do locally, run `kit install-as <module-name>'. Then your code will be available in the same way `kit/base/vector.h` was above.
+    To make code available in the same way `kit/base/vector.h` was above, run `kit install-as <module-name>'.
 
-    Kit also maintains a central index, which anyone can access remotely. If you feel that your code could be useful to others, send a pull request with edits to MODULES.csv.
-
-4. Distribute libraries & applications.
-    
-    Kit is capable of generating self-contained projects [which do not require kit itself]. These are beneficial, especially since the majority of C developers are unaware of kit.
-
-    Run `kit dist` to do this. Output is directed to `build/dist`.
+    If you feel that your code could be useful to others, send a pull request with edits to MODULES.csv. That file lists items in the central index.
 
 
 
