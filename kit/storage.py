@@ -99,6 +99,12 @@ def clear_module(name):
 		shutil.rmtree(module_path(name))
 		unindex(name)
 
+def fetch_unindexed_module(repo):
+	name = repo.split('/')[-1].replace('.git', '')
+	clear_module(name)
+	os.system('git clone ' + url + ' ' + modules + '/' + name)
+	index(name, url)
+
 def fetch_module(name):
 	clear_module(name)
 	url = remote_resolve(name)

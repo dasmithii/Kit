@@ -20,9 +20,12 @@ def dist(context):
 	print 'TODO: command `dist` is not yet implemented'
 
 
-# Attempts to clone repository from central index.
+# Attempts to clone repository from remote index.
 def fetch(context):
-	storage.fetch_module(context.name)
+	if context.name.find('.git') >= 0:
+		storage.fetch_unindexed_module(context.name)
+	else:
+		storage.fetch_module(context.name)
 
 
 # Deletes module with given name from local index.
@@ -83,7 +86,7 @@ def modules(context):
 			print ' - ' + m[0], '[' + utility.color('compiled', 'green') + ']'
 		else:
 			print ' - ' + m[0], '[' + utility.color('not compiled', 'red') + ']'
-	print '\ncentral index:  (' + str(len(remote)) + ')'
+	print '\nremote:  (' + str(len(remote)) + ')'
 	for m in remote:
 		print ' -', m[0], '[' + utility.color(m[1], 'yellow') + ']'
 
