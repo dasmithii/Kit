@@ -16,37 +16,23 @@ cd ..
 
 
 ## Sample Usage
-+ Set a project.
-    ```
-    mkdir my-project
-    cd my-project
-    kit init
-    ```
-    At this point, [valid] boilerplate code has been generated, and `kit build`     will output two executables in build/bin: (1) the main application, and (2)     the unit test wrapper.
+#### Set a boilerplate project.
+```
+mkdir my-project
+cd my-project
+kit init
+```
++ `kit run` is short for `./build/bin/my-project`
++ `kit test` is short for `./build/bin/tests`
 
-    + `kit run` is a shortcut for `./build/bin/my-project
-    + `kit test` is a shortcut for `./build/bin/tests
+#### Include kit modules.
+`kit build` scans the source tree for lines that match `#include <kit/*>`, attempting to resolve each dependency. This is done by searching the local index, and if specified modules aren't found, by resorting to the central registry. Located modules are linked against, and their corresponding headers are added to the include path.
 
-+ Include modules from the centralized index.
+tl;dr: to include a module, `#include <kit/module/file.h`.
     
-    ```
-    // file: sources/main.c
-    #include <kit/base/vector.h>
-
-    int main() {
-        vector vec;
-        vector_init(&vec);
-        // use vector here...
-        vector_clean();
-    }
-    ```
-    Kit recognizes `#include <kit/base*` and searches for a module named "base". If not installed already, it is downloaded from the central index and compiled as a static archive. Then, during `kit build`, the library is linked against and its headers added to the include path.
+#### Create your own modules.
     
-+ Create your own modules.
-    
-    To make code available in the same way `kit/base/vector.h` was above, run `kit install-as <module-name>'.
-
-    If you feel that your code could be useful to others, send a pull request with edits to MODULES.csv. That file lists items in the central index.
+To make code available locally, run `kit install-as module-name'. If you feel that your code could be useful to others, send a pull request with edits to MODULES.csv. That file lists items in the central index.
 
 
 
