@@ -81,10 +81,13 @@ def unindex(name):
 	with open(module_list, 'w') as f:
 		f.writelines(map(', '.join, mods)) 
 
-
-
 def contains_module(name):
 	return os.path.exists(module_path(name))
+
+def remote_contains_module(name):
+	if remote_resolve(name):
+		return True
+	return False
 
 def clear_module(name):
 	if contains_module(name):

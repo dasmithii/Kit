@@ -88,6 +88,13 @@ def make(path):
 def build_directory(path):
 	deps = scanner.directory_dependencies(path)
 	for dep in deps:
+		if not storage.contains_module(dep):
+			if storage.remote_contains_module(dep):
+				storage.fetch_module(dep)
+			else:
+				print utility.color('module not found: ' + dep, 'red')
+				print utility.color('build failed', 'red')
+				exit(1)
 		ready_indexed_module(dep)
 	generate_cmake(path, deps)
 	make(path)
