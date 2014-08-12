@@ -1,11 +1,11 @@
-## Overview
+# Overview
 In contrast with many modern languages, C has no central authority of project management. From basic directory structure to build tools, everything seems fragmented. More so, libraries are inaccessibly scattered across the web - and that pressures developers to reinvent the wheel over and over again.
 
 Kit is a solution to these problems. It provides standardized project structure, centralized module indexing, and a convenient build tool [which wraps CMake, capitalizing on standardization].
 
 
 
-## Installation
+# Installation
 ```
 git clone https://github.com/dasmithii/Kit.git
 cd Kit
@@ -15,7 +15,7 @@ cd ..
 
 
 
-## Sample Usage
+# Sample Usage
 #### Set a boilerplate project.
 ```
 mkdir my-project
@@ -38,6 +38,6 @@ To make code available locally, run `kit install'. If you feel that your code co
 
 
 
-## Further Information
+# Further Information
 - [contributing](documentation/contributing.md)
 - [tutorial](documentation/tutorial.md)
