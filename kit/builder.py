@@ -21,20 +21,23 @@ def prepare_headers(name):
 		shutil.copyfile(path, headers + '/' + dest)
 
 
+def module_ready(name):
+	root = storage.module_path(name)
+	return os.path.exists(root + '/build')
+
 
 # Same as above but for globally-available modules.
 def ready_indexed_module(name):
-	print " - preparing module: " + name
-	path = storage.module_path(name)
-	build_directory(path)
-	prepare_headers(name)
+	if not module_ready(name):
+		path = storage.module_path(name)
+		build_directory(path)
+		prepare_headers(name)
 
 
 # Generates CMakeLists file for project. This should be removed after
 # compilation.
 def generate_cmake(path, deps):
 	name = os.path.abspath(path).split('/')[-1]
-	print " - generating CMakeLists"
 	with open(path + '/CMakeLists.txt', 'w') as f:
 		f.write('project(KitModule C)\n')
 		f.write('cmake_minimum_required(VERSION 2.6)\n')
@@ -45,8 +48,6 @@ def generate_cmake(path, deps):
 		f.write('SET(CMAKE_C_FLAGS  "-g -Wall -O2")\n')
 		f.write('file(GLOB_RECURSE sources "sources/*.h" "sources/*.c")\n')
 		f.write('file(GLOB_RECURSE test_sources "tests/*.h" "tests/*.c")\n')
-		
-		# gather dependency headers
 		f.write('set(headers "")\n')
 		for dep in deps:
 			f.write('file(GLOB_RECURSE t1 "' + storage.module_header_path(dep) + '/*.h")\n')
@@ -73,7 +74,6 @@ def generate_cmake(path, deps):
 # Compiles executables and libraries for given project, assuming
 # that all dependencies have been resolved a priori.
 def make(path):
-	print ' - running `make`'
 	wd = os.getcwd()
 	os.chdir(path)
 	os.system('mkdir -p build')
@@ -86,7 +86,6 @@ def make(path):
 	
 # Compiles libraries and headers for given directory.
 def build_directory(path):
-	print ' - building directory: "' + path, '"'
 	deps = scanner.directory_dependencies(path)
 	for dep in deps:
 		ready_indexed_module(dep)

@@ -19,3 +19,19 @@ def headers_under(directory):
 
 def touch(path):
 	os.system('touch ' + path)
+
+
+def compile(color):
+	options = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
+	index = options.index(color)
+	if index == -1:
+		raise 'non-supported color'
+	else:
+		return index + 30
+
+def color_with_code(text, code):
+	return "\033[" + str(code) + "m" + text + "\033[0m"
+
+def color(text, color):
+	code = compile(color)
+	return color_with_code(text, code)
