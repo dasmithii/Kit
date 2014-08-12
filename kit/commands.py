@@ -12,7 +12,7 @@ def build(context):
 
 
 def dist(context):
-	print 'TODO'
+	print 'TODO: command `dist` is not yet implemented'
 
 
 def fetch(context):
@@ -52,7 +52,7 @@ def init(context):
 		f.write('build\n')
 
 
-def install(context):
+def install_as(context):
 	build()
 	if os.path.exists('sources/main.c'):
 		name = os.path.abspath(path).split('/')[-1]
@@ -75,10 +75,6 @@ def modules(context):
 	print '\ncentral index:  (' + str(len(remote)) + ')'
 	for m in remote:
 		print ' -', m[0], '[' + utility.color(m[1], 'yellow') + ']'
-
-
-def register(context):
-	print 'TODO'
 
 
 def run(context):
