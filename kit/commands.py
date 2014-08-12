@@ -4,25 +4,33 @@ import utility
 import storage
 import builder
 
+# Deletes on compilation products.
 def clean(context):
 	shutil.rmtree('build', ignore_errors=True)
 
+
+# Compiles current directory.
 def build(context):
 	builder.build_directory('.')
 
 
+# Geneerates a self-contained C project [which doesn't depend
+# on kit] and places it in build/dist.
 def dist(context):
 	print 'TODO: command `dist` is not yet implemented'
 
 
+# Attempts to clone repository from central index.
 def fetch(context):
 	storage.fetch_module(context.name)
 
 
+# Deletes module with given name from local index.
 def remove(context):
 	storage.clear_module(context.name)
 
 
+# Sets up boilerplate project structure.
 def init(context):
 	os.makedirs('documentation')
 	os.makedirs('sources')
@@ -52,7 +60,9 @@ def init(context):
 		f.write('build\n')
 
 
-def install_as(context):
+# If building an application, its executable is made available 
+# globally. Otherwise, the library is placed in the local index.
+def install(context):
 	build()
 	if os.path.exists('sources/main.c'):
 		name = os.path.abspath(path).split('/')[-1]
@@ -63,6 +73,7 @@ def install_as(context):
 		storage.index(context.name, '')
 
 
+# Lists available modules (both local and remote).
 def modules(context):
 	local = storage.local_modules()
 	remote = storage.remote_modules()
@@ -77,16 +88,19 @@ def modules(context):
 		print ' -', m[0], '[' + utility.color(m[1], 'yellow') + ']'
 
 
+# Builds and runs generated executable.
 def run(context):
 	build(None)
 	name = os.getcwd().split('/')[-1]
 	os.execv('build/bin/' + name, context.args)
 
 
+# Builds target and runs its tests.
 def test(context):
 	build(None)
 	os.execv('build/bin/tests', [''])
 
 
+# Hack.
 def execute(context):
 	globals()[context.command](context)

@@ -30,9 +30,9 @@ kit init
 
 tl;dr: to include a module, `#include <kit/module/file.h`.
     
-#### Create your own modules.
+#### Create kit modules.
     
-To make code available locally, run `kit install-as module-name'. If you feel that your code could be useful to others, send a pull request with edits to MODULES.csv. That file lists items in the central index.
+To make code available locally, run `kit install'. If you feel that your code could be useful to others, send a pull request with edits to MODULES.csv. That file lists items in the central index.
 
 
 
