@@ -54,8 +54,13 @@ def init(context):
 
 def install(context):
 	build()
-	for path in utility.files_under('build/bin'):
-		shutil.copyfile(path, '/usr/local/bin')
+	if os.path.exists('sources/main.c'):
+		name = os.path.abspath(path).split('/')[-1]
+		shutil.copy('build/bin/' + name, '/usr/local/bin/' + context.name)
+	else:
+		dest = storage.module_path(context.name)
+		shutil.copytree('.', dest)
+		storage.index(context.name, '')
 
 
 def modules(context):
