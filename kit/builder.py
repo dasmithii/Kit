@@ -21,14 +21,9 @@ def prepare_headers(name):
 		shutil.copyfile(path, headers + '/' + dest)
 
 
-def module_ready(name):
-	root = storage.module_path(name)
-	return os.path.exists(root + '/build')
-
-
 # Same as above but for globally-available modules.
 def ready_indexed_module(name):
-	if not module_ready(name):
+	if not module_compiled(name):
 		path = storage.module_path(name)
 		build_directory(path)
 		prepare_headers(name)

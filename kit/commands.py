@@ -63,10 +63,13 @@ def modules(context):
 	remote = storage.remote_modules()
 	print 'local:  (' + str(len(local)) + ')'
 	for m in local:
-		print ' - [' + m[0] + ']', m[1]
+		if storage.module_compiled(m[0]):
+			print ' - ' + m[0], '[' + utility.color('compiled', 'green') + ']'
+		else:
+			print ' - ' + m[0], '[' + utility.color('not compiled', 'red') + ']'
 	print '\ncentral index:  (' + str(len(remote)) + ')'
 	for m in remote:
-		print ' - [' + m[0] + ']', m[1]
+		print ' -', m[0], '[' + utility.color(m[1], 'yellow') + ']'
 
 
 def register(context):

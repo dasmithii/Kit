@@ -89,6 +89,11 @@ def remote_contains_module(name):
 		return True
 	return False
 
+
+def module_compiled(name):
+	root = module_path(name)
+	return os.path.exists(root + '/build')
+
 def clear_module(name):
 	if contains_module(name):
 		shutil.rmtree(module_path(name))
