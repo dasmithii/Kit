@@ -12,7 +12,7 @@ subs.add_parser('fetch', help='download module from remote index').add_argument(
 subs.add_parser('remove', help='deletes module from local index').add_argument('name', action='store')
 subs.add_parser('init', help='initialize project structure')
 subs.add_parser('install', help='register project in local index')
-subs.add_parser('modules', help='list available modules')
+subs.add_parser('modules', help='list available modules').add_argument('-l', '--local', help='display local modules only', action='store_true', default=False)
 subs.add_parser('run', help='compile and run executable')
 subs.add_parser('test', help='run tests for given module, defaulting to current')
 

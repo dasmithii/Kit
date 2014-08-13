@@ -79,13 +79,17 @@ def install(context):
 # Lists available modules (both local and remote).
 def modules(context):
 	local = storage.local_modules()
-	remote = storage.remote_modules()
 	print 'local:  (' + str(len(local)) + ')'
 	for m in local:
 		if storage.module_compiled(m[0]):
 			print ' - ' + m[0], '[' + utility.color('compiled', 'green') + ']'
 		else:
 			print ' - ' + m[0], '[' + utility.color('not compiled', 'red') + ']'
+
+	if context.local:
+		return
+
+	remote = storage.remote_modules()
 	print '\nremote:  (' + str(len(remote)) + ')'
 	for m in remote:
 		print ' -', m[0], '[' + utility.color(m[1], 'yellow') + ']'
