@@ -10,7 +10,8 @@ import utility
 # TODO: minimize headers
 def prepare_headers(name):
 	root = storage.module_path(name)
-	headers = root + '/build/headers/kit/' + name
+	baseheaders = root + '/build/headers/kit'
+	headers = baseheaders + '/' + name
 	for path in utility.headers_under(root):
 		if path.find('build') == 0:
 			continue
@@ -18,15 +19,23 @@ def prepare_headers(name):
 		dest = '/'.join(dest.split('/')[1:])
 		if not os.path.exists(headers):
 			os.makedirs(headers)
-		shutil.copyfile(path, headers + '/' + dest)
+		shutil.copy(path, headers + '/' + dest)
+
+		if path.replace(root + '/sources/', '') == name + '.h':
+			shutil.copy(path, baseheaders)
+	print ' - prepared headers'
+
 
 
 # Ensure that module is compiled.
 def ready_indexed_module(name):
-	if not storage.module_compiled(name):
+	if storage.module_compiled(name):
+		print utility.color(' - already compiled', 'green')
+	else:
 		path = storage.module_path(name)
 		build_directory(path)
 		prepare_headers(name)
+		print utility.color(' - compiled module: ' + name, 'green')
 
 
 # Generates CMakeLists file for project. This should be removed after
@@ -63,32 +72,41 @@ def generate_cmake(path, deps):
 			f.write('TARGET_LINK_LIBRARIES(tests ' + dep + ')\n')
 			f.write('TARGET_LINK_LIBRARIES(' + name + ' ' + dep + ')\n')
 			f.write('include_directories(' + storage.module_header_path(dep) + ')\n')
+	print ' - generated CMakeLists.txt'
 
 
 
 # Compiles executables and libraries for given project, assuming
 # that all dependencies have been resolved a priori.
 def make(path):
+	print ' - running `make`...'
 	wd = os.getcwd()
 	os.chdir(path)
 	os.system('mkdir -p build')
 	os.chdir('build')
-	os.system('cmake -Wno-dev .. > /dev/null')
-	os.system('make > /dev/null')
+	c1 = os.system('cmake -Wno-dev .. > /dev/null')
+	c2 = os.system('make > /dev/null')
 	os.system('rm ../CMakeLists.txt')
 	os.chdir(wd)
+	if c1 == 0 and c2 == 0:
+		print utility.color(' - build successfull', 'green')
+	else:
+		print utility.color(' - build failed', 'red')
+		exit(1)
+
 
 	
 # Compiles libraries and headers for given directory.
 def build_directory(path):
 	deps = scanner.directory_dependencies(path)
 	for dep in deps:
+		print ' - resolving dependency:', dep
 		if not storage.contains_module(dep):
 			if storage.remote_contains_module(dep):
 				storage.fetch_module(dep)
 			else:
-				print utility.color('module not found: ' + dep, 'red')
-				print utility.color('build failed', 'red')
+				print utility.color(' - module not found: ' + dep, 'red')
+				print utility.color(' - build failed', 'red')
 				exit(1)
 		ready_indexed_module(dep)
 	generate_cmake(path, deps)

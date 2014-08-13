@@ -1,7 +1,7 @@
 import os
 import urllib
 import shutil
-import logging
+import utility
 from utility import *
 
 
@@ -32,6 +32,7 @@ def setup():
 	os.makedirs(modules + '/' + 'headers/kit')
 	with open(module_list, 'w+') as f:
 		f.write('')
+	print utility.color(' - setup kit storage', 'green')
 
 
 # Runs setup if not done already.
@@ -65,14 +66,13 @@ def remote_modules():
 		index = urllib.urlopen(remote_index_url)
 		return module_tuples(index.read())
 	except:
-		logging.info("failed to retrieve module index")
+		print utility.color(' - failed to retrieve remote index', 'red')
 		return []
 
 
 # Fetches git repository of module with given name in central
 # index. 
 def remote_resolve(name):
-	print 'resolving...', name
 	mods = filter(lambda t: t[0] == name, remote_modules())[0]
 	if len(mods) > 0:
 		return mods[1]
@@ -105,13 +105,15 @@ def module_sources(name):
 def index(name, url):
 	with open(module_list, 'a') as f:
 		f.write('\n' + name + ', ' + url)
+	print utility.color(' - indexed module: ' + name, 'green')
 
 
 # Reverse above operation.
 def unindex(name):
 	mods = filter(lambda t: t[0] != name, local_modules())
 	with open(module_list, 'w') as f:
-		f.writelines(map(', '.join, mods)) 
+		f.writelines(map(', '.join, mods))
+	print utility.color(' - unindexed module: ' + name, 'green')
 
 
 # Check if module is indexed.
@@ -134,6 +136,7 @@ def module_compiled(name):
 # Remove build products.
 def clear_module(name):
 	if contains_module(name):
+		print ' - deleted module:', name
 		shutil.rmtree(module_path(name))
 		unindex(name)
 
@@ -142,18 +145,25 @@ def clear_module(name):
 def fetch_unindexed_module(repo):
 	name = repo.split('/')[-1].replace('.git', '')
 	clear_module(name)
-	os.system('git clone ' + url + ' ' + modules + '/' + name)
-	index(name, url)
+	if 0 == os.system('git clone ' + repo + ' ' + modules + '/' + name):
+		print utility.color(' - cloned module successfully', 'green')
+		index(name, repo)
+	else:
+		print utility.color(' - failed to fetch module: ' + name, 'red')
+
 
 
 # Fetches from central index.
 def fetch_module(name):
 	clear_module(name)
 	url = remote_resolve(name)
-	if not url:
-		logging.error("failed to fetch module " + name)
-	else:
-		os.system('git clone ' + url + ' ' + modules + '/' + name)
+	if url and 0 == os.system('git clone ' + url + ' ' + modules + '/' + name):
+		print utility.color(' - cloned module successfully', 'green')
 		index(name, url)
+	else:
+		print utility.color(' - failed to fetch module: ' + name, 'red')
+
+
+
 
 
