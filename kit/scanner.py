@@ -1,3 +1,4 @@
+import json
 import operator
 import storage
 from utility import *
@@ -70,3 +71,35 @@ def module_dependencies(name):
 	return directory_dependencies(path)
 
 
+# Parses kit.meta without injecting defaults.
+def directory_metafile_contents(path):
+	path += '/kit..meta'
+	if os.path.exists(path):
+		f = open(path, 'r')
+		text = f.read()
+		try:
+			return json.loads(text)
+		except:
+			print utility.color(" - couldn't parse kit.meta", 'red')
+			exit(1)
+		f.close()
+	else:
+		return ''
+
+
+# Scans kit.meta for json data. Required fields are set to their
+# defaults if not otherwise specified.
+def directory_metadata(path):
+
+	data = {
+		"author" : 'unknown',
+		"cflags" : ''
+	}
+	meta = directory_metafile_contents(path)
+	data.update(meta)
+	return data
+
+
+# Current directory...
+def metadata():
+	return directory_metadata('.')
