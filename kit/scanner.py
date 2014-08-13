@@ -15,8 +15,15 @@ def has_kit(s):
 def is_dependency(s):
 	return has_pound(s) and has_kit(s)
 
+
+# Parses kit include statement (as follows).
+# '#include <kit/module/file.h>'  =>  'base/module/file.h'
+# '#include <kit/file.h>'         =>  'base/file/file.h'
 def extract_reference(s):
-	return s[s.find('kit/') + 4 : s.find('>')]
+	main = s[s.find('kit/') + 4 : s.find('>')]
+	if main.count('/') == 0:
+		main = main[0:main.find('.')] + main
+	return main
 
 
 # Extracts paths included in format: #include <kit/module/file.h>, which
