@@ -1,8 +1,3 @@
-# Status
-Functional, though not fully featured.
-
-
-
 # Overview
 In contrast with many modern languages, C has no central authority of project management. From basic directory structure to build tools, everything seems fragmented. More so, libraries are inaccessibly scattered across the web - and that pressures developers to reinvent the wheel over and over again.
 
