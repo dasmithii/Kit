@@ -66,14 +66,14 @@ def init(context):
 # If building an application, its executable is made available 
 # globally. Otherwise, the library is placed in the local index.
 def install(context):
-	build()
+	build(None)
+	name = os.path.abspath('.').split('/')[-1]
 	if os.path.exists('sources/main.c'):
-		name = os.path.abspath(path).split('/')[-1]
-		shutil.copy('build/bin/' + name, '/usr/local/bin/' + context.name)
+		shutil.copy('build/bin/' + name, '/usr/local/bin/' + name)
 	else:
-		dest = storage.module_path(context.name)
+		dest = storage.module_path(name)
 		shutil.copytree('.', dest)
-		storage.index(context.name, '')
+		storage.index(name, 'none')
 
 
 # Lists available modules (both local and remote).

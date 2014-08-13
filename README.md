@@ -16,7 +16,7 @@ cd ..
 
 
 # Sample Usage
-#### Set a boilerplate project.
+#### Spawn a boilerplate project.
 ```
 mkdir my-project
 cd my-project

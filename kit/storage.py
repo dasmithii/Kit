@@ -102,7 +102,7 @@ def module_sources(name):
 
 # Include module in the local registry.
 def index(name, url):
-	with open(module_list, 'w+') as f:
+	with open(module_list, 'a') as f:
 		f.write('\n' + name + ', ' + url)
 
 
