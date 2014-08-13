@@ -72,6 +72,7 @@ def remote_modules():
 # Fetches git repository of module with given name in central
 # index. 
 def remote_resolve(name):
+	print 'resolving...', name
 	mods = filter(lambda t: t[0] == name, remote_modules())[0]
 	if len(mods) > 0:
 		return mods[1]

@@ -22,7 +22,7 @@ def is_dependency(s):
 def extract_reference(s):
 	main = s[s.find('kit/') + 4 : s.find('>')]
 	if main.count('/') == 0:
-		main = main[0:main.find('.')] + main
+		main = main[0:main.find('.')] + '/' + main
 	return main
 
 
