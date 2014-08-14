@@ -28,7 +28,7 @@ kit init
 #### Include kit modules.
 `kit build` scans the source tree for lines that match `#include <kit/*>`, attempting to resolve each dependency. This is done by searching the local index, and if specified modules aren't found, by resorting to the central registry. Located modules are linked against, and their corresponding headers are added to the include path.
 
-tl;dr: to include a module, `#include <kit/module/file.h`.
+tl;dr: to include a module, `#include <kit/module/file.h>`.
     
 #### Create kit modules.
     
