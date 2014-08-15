@@ -13,16 +13,21 @@ def prepare_headers(name):
 	baseheaders = root + '/build/headers/kit'
 	headers = baseheaders + '/' + name
 	for path in utility.headers_under(root):
+		# don't duplicate if already prepared 
 		if path.find('build') == 0:
 			continue
+
+		# move file
 		dest = path.replace(root + '/', '')
 		dest = '/'.join(dest.split('/')[1:])
 		if not os.path.exists(headers):
 			os.makedirs(headers)
 		shutil.copy(path, headers + '/' + dest)
 
-		if path.replace(root + '/sources/', '') == name + '.h':
-			shutil.copy(path, baseheaders)
+		# make `#include <kit/name.h>` function as `#include <kit/name/api.h>`
+		short = path.replace(root + '/sources/', '')
+		if short == 'api.h':
+			shutil.copy(path, baseheaders + '/' + name + '.h')
 	print ' - prepared headers'
 
 
