@@ -24,9 +24,9 @@ def prepare_headers(name):
 			os.makedirs(headers)
 		shutil.copy(path, headers + '/' + dest)
 
-		# make `#include <kit/name.h>` function as `#include <kit/name/api.h>`
+		# make `#include <kit/name.h>` function as `#include <kit/name/{api.h, name.h}>`
 		short = path.replace(root + '/sources/', '')
-		if short == 'api.h':
+		if short == 'api.h' or short == name + '.h':
 			shutil.copy(path, baseheaders + '/' + name + '.h')
 	print ' - prepared headers'
 
