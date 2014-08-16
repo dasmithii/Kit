@@ -50,13 +50,16 @@ def generate_cmake(root, deps):
 	name = os.path.abspath(root).split('/')[-1]
 	meta = scanner.directory_metadata(root)
 	with open(root + '/CMakeLists.txt', 'w') as f:
-		f.write('project(KitModule C)\n')
+		f.write('project(KitModule ' + meta['language'] + ')\n')
 		f.write('cmake_minimum_required(VERSION 2.6)\n')
 		f.write('cmake_policy(VERSION 2.6)\n')
 		f.write('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
 		f.write('set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
 		f.write('set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
-		f.write('SET(CMAKE_C_FLAGS  "' + meta['flags'] + '")\n')
+		if meta['language'] == 'C':
+			f.write('SET(CMAKE_C_FLAGS  "' + meta['flags'] + '")\n')
+		else:
+			f.write('SET(CMAKE_CXX_FLAGS  "' + meta['flags'] + '")\n')
 
 		# Fetch necessary files.
 		headers = [] #reduce(operator.add, map(storage.header_paths, deps))
@@ -64,7 +67,7 @@ def generate_cmake(root, deps):
 		test_sources = utility.sources_under(root + '/tests')
 
 		# Build application [if sources/main.c is present].
-		if os.path.exists(root + '/sources/main.c'):
+		if scanner.has_main(root):
 			files = sources + headers
 			f.write('add_executable(' + name + ' "' + '" "'.join(files) + '")\n')
 
@@ -72,7 +75,7 @@ def generate_cmake(root, deps):
 		files = filter(lambda s: s.find('main.') == -1, headers + sources)
 		if len(files) > 0:
 			f.write('add_library(' + name + '_static STATIC "' + '" "'.join(files) + '")\n')
-			f.write('set_target_properties(' + name + '_static PROPERTIES LINKER_LANGUAGE C)\n')
+			# f.write('set_target_properties(' + name + '_static PROPERTIES LINKER_LANGUAGE C)\n')
 
 		# Build test executable.
 		files += test_sources
@@ -83,7 +86,7 @@ def generate_cmake(root, deps):
 			f.write('add_library(' + dep + ' STATIC IMPORTED)\n')
 			f.write('set_target_properties(' + dep + ' PROPERTIES IMPORTED_LOCATION "' + storage.module_library_path(dep) + '")\n')
 			f.write('TARGET_LINK_LIBRARIES(tests ' + dep + ')\n')
-			if os.path.exists(root + '/sources/main.c'):
+			if scanner.has_main(root):
 				f.write('TARGET_LINK_LIBRARIES(' + name + ' ' + dep + ')\n')
 			f.write('include_directories(' + storage.module_header_path(dep) + ')\n')
 	print ' - generated CMakeLists.txt'

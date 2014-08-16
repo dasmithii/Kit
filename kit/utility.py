@@ -15,13 +15,14 @@ def files_under(directory):
 # Gathers .c files recursively.
 def sources_under(directory):
 	files = files_under(directory)
-	return filter(lambda x: x.endswith(('.h', '.c')), files)
+	exten = ('.h', '.c', '.hh', '.cc', '.cpp', '.cxx')
+	return filter(lambda x: x.endswith(exten), files)
 
 
 # Gathers .h files recursively.
 def headers_under(directory):
 	files = files_under(directory)
-	return filter(lambda x: x.endswith('.h'), files)
+	return filter(lambda x: x.endswith(('.h', '.hh')), files)
 
 
 # Creates file.

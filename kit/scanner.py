@@ -1,7 +1,7 @@
+import os
 import json
-import operator
 import storage
-from utility import *
+import utility
 from sets import Set
 
 
@@ -43,7 +43,7 @@ def file_references(path):
 # a set of kit modules to include.
 def directory_references(root):
 	refs = Set()
-	for path in sources_under(root):
+	for path in utility.sources_under(root):
 		refs |= file_references(path)
 	return refs
 
@@ -87,13 +87,24 @@ def directory_metafile_contents(path):
 		return ''
 
 
+# Checks for c++ files.
+def contains_cpp(root):
+	for path in utility.files_under(root):
+		if path.endswith(('.cpp', '.cc', '.hh', '.cxx')):
+			return True
+	return False
+
+
 # Scans kit.meta for json data. Required fields are set to their
 # defaults if not otherwise specified.
 def directory_metadata(path):
 	data = {
 		"author" : 'unknown',
-		"flags" : ''
+		"flags" : '',
+		"language": 'C'
 	}
+	if contains_cpp(path):
+		data['language'] += ' CXX'
 	meta = directory_metafile_contents(path)
 	data.update(meta)
 	return data
@@ -102,3 +113,10 @@ def directory_metadata(path):
 # Current directory...
 def metadata():
 	return directory_metadata('.')
+
+
+def has_main(root):
+	for ext in ['c', 'cc', 'cpp', 'cxx']:
+		if os.path.exists(root + '/sources/main.' + ext):
+			return True
+	return False

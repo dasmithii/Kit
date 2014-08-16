@@ -2,7 +2,6 @@ import os
 import urllib
 import shutil
 import utility
-from utility import *
 
 
 # Some helpful paths.
