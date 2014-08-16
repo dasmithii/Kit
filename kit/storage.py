@@ -89,13 +89,16 @@ def module_path(name):
 def module_header_path(name):
 	return module_path(name) + '/build/headers'
 
+def module_header_paths(name):
+	path = storage.module_header_path(name)
+	return utility.headers_under(path)
 
 def module_source_path(name):
 	return module_path(name) + '/sources'
 
 def module_library_path(name):
 	base = module_path(name) + '/build/bin/lib' + name
-	return base + '.a'
+	return base + '_static.a'
 
 def module_sources(name):
 	return sources_under(module_path(name))

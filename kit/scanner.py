@@ -90,10 +90,9 @@ def directory_metafile_contents(path):
 # Scans kit.meta for json data. Required fields are set to their
 # defaults if not otherwise specified.
 def directory_metadata(path):
-
 	data = {
 		"author" : 'unknown',
-		"cflags" : ''
+		"flags" : ''
 	}
 	meta = directory_metafile_contents(path)
 	data.update(meta)

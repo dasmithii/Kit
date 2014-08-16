@@ -43,39 +43,48 @@ def ready_indexed_module(name):
 		print utility.color(' - compiled module: ' + name, 'green')
 
 
+
 # Generates CMakeLists file for project. This should be removed after
 # compilation.
-def generate_cmake(path, deps):
-	name = os.path.abspath(path).split('/')[-1]
-	with open(path + '/CMakeLists.txt', 'w') as f:
+def generate_cmake(root, deps):
+	name = os.path.abspath(root).split('/')[-1]
+	meta = scanner.directory_metadata(root)
+	with open(root + '/CMakeLists.txt', 'w') as f:
 		f.write('project(KitModule C)\n')
 		f.write('cmake_minimum_required(VERSION 2.6)\n')
 		f.write('cmake_policy(VERSION 2.6)\n')
 		f.write('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
 		f.write('set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
 		f.write('set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
-		f.write('SET(CMAKE_C_FLAGS  "' + scanner.metadata()['cflags'] + '")\n')
-		f.write('file(GLOB_RECURSE sources "sources/*.h" "sources/*.c")\n')
-		f.write('file(GLOB_RECURSE test_sources "tests/*.h" "tests/*.c")\n')
-		f.write('set(headers "")\n')
-		for dep in deps:
-			f.write('file(GLOB_RECURSE t1 "' + storage.module_header_path(dep) + '/*.h")\n')
-			f.write('set(t2 ${headers})\n')
-			f.write('set(headers ${t1} ${t2})\n')
+		f.write('SET(CMAKE_C_FLAGS  "' + meta['flags'] + '")\n')
 
-		if os.path.exists(path + '/sources/main.c'):
-			f.write('add_executable(' + name + ' ${sources} ${headers})\n')
-			f.write('set(test_sources2 ${sources} ${test_sources})\n')
-			f.write('list(REMOVE_ITEM test_sources2 "${PROJECT_SOURCE_DIR}/sources/main.c")\n')
-			f.write('add_executable(tests ${test_sources2} ${headers})\n')
-		else:
-			f.write('add_library(' + name + ' STATIC ${sources} ${headers})\n')
-			f.write('add_executable(tests ${sources} ${test_sources} ${headers})\n')
+		# Fetch necessary files.
+		headers = [] #reduce(operator.add, map(storage.header_paths, deps))
+		sources = utility.sources_under(root + '/sources')
+		test_sources = utility.sources_under(root + '/tests')
+
+		# Build application [if sources/main.c is present].
+		if os.path.exists(root + '/sources/main.c'):
+			files = sources + headers
+			f.write('add_executable(' + name + ' "' + '" "'.join(files) + '")\n')
+
+		# Build module as static library.
+		files = filter(lambda s: s.find('main.') == -1, headers + sources)
+		if len(files) > 0:
+			f.write('add_library(' + name + '_static STATIC "' + '" "'.join(files) + '")\n')
+			f.write('set_target_properties(' + name + '_static PROPERTIES LINKER_LANGUAGE C)\n')
+
+		# Build test executable.
+		files += test_sources
+		f.write('add_executable(tests "' + '" "'.join(files) + '")\n')
+
+		# Link against compiled dendencies.
 		for dep in deps:
-			f.write('add_library(' + dep + ' SHARED IMPORTED)\n')
+			f.write('add_library(' + dep + ' STATIC IMPORTED)\n')
 			f.write('set_target_properties(' + dep + ' PROPERTIES IMPORTED_LOCATION "' + storage.module_library_path(dep) + '")\n')
 			f.write('TARGET_LINK_LIBRARIES(tests ' + dep + ')\n')
-			f.write('TARGET_LINK_LIBRARIES(' + name + ' ' + dep + ')\n')
+			if os.path.exists(root + '/sources/main.c'):
+				f.write('TARGET_LINK_LIBRARIES(' + name + ' ' + dep + ')\n')
 			f.write('include_directories(' + storage.module_header_path(dep) + ')\n')
 	print ' - generated CMakeLists.txt'
 
@@ -91,7 +100,7 @@ def make(path):
 	os.chdir('build')
 	c1 = os.system('cmake -Wno-dev .. > /dev/null')
 	c2 = os.system('make > /dev/null')
-	os.system('rm ../CMakeLists.txt')
+	# os.system('rm ../CMakeLists.txt')
 	os.chdir(wd)
 	if c1 == 0 and c2 == 0:
 		print utility.color(' - build successfull', 'green')
