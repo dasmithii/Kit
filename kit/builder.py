@@ -26,8 +26,8 @@ def prepare_headers(name):
 
 		# make `#include <kit/name.h>` function as `#include <kit/name/{api.h, name.h}>`
 		short = path.replace(root + '/sources/', '')
-		if short == 'api.h' or short == name + '.h':
-			shutil.copy(path, baseheaders + '/' + name + '.h')
+		if short in ['api.h', 'api.hh', name + '.h', name + '.hh']:
+			shutil.copy(path, baseheaders + '/' + name + short[short.find('.'):])
 	print ' - prepared headers'
 
 
