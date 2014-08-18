@@ -26,17 +26,17 @@ usage = '''
 
 
 def run_cli():
-	args = sys.argv
-	if len(args) < 2:
-		print utility.color(' - invalid argument list', 'red')
-	else:
-		com = args[1]
-		arg = args[2] if len(args) > 2 else None
-		if com == 'help':
-			print usage
-		else:
-			commands.execute(com, arg) 
+    args = sys.argv
+    if len(args) < 2:
+        print utility.color(' - invalid argument list', 'red')
+    else:
+        com = args[1]
+        arg = args[2] if len(args) > 2 else None
+        if com == 'help':
+            print usage
+        else:
+            commands.execute(com, arg)
 
 
 if __name__ == '__main__':
-	run_cli()
+    run_cli()
