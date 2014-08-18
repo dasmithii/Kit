@@ -59,6 +59,10 @@ def local_modules():
 		return module_tuples(f.read())
 
 
+def local_module_names():
+	return map(lambda x: x[0], local_modules())
+
+
 # Parses remote index.
 def remote_modules():
 	try:
@@ -67,6 +71,9 @@ def remote_modules():
 	except:
 		print utility.color(' - failed to retrieve remote index', 'red')
 		return []
+
+def remote_module_names():
+	return map(lambda x: x[0], remote_modules())
 
 
 # Fetches git repository of module with given name in central

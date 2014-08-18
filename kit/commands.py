@@ -2,39 +2,57 @@ import os
 import shutil
 import utility
 import storage
+import scanner
 import builder
+import subprocess
+
+
+
+def output_name(path):
+	return os.path.abspath(path).split('/')[-1]
+
 
 # Deletes on compilation products.
-def clean(context):
-	shutil.rmtree('build', ignore_errors=True)
+def clean(path):
+	shutil.rmtree(path + '/build', ignore_errors=True)
 
 
-# Compiles current directory.
-def build(context):
-	builder.build_directory('.')
+# Compiles directory.
+def build(path):
+	builder.build_directory(path)
 
 
 # Geneerates a self-contained C project [which doesn't depend
 # on kit] and places it in build/dist.
-def dist(context):
-	print 'TODO: command `dist` is not yet implemented'
+def dist(path):
+	print utility.color('TODO: command `dist` has not yet been implemented', 'red')
 
 
 # Attempts to clone repository from remote index.
-def fetch(context):
-	if context.name.find('.git') >= 0:
-		storage.fetch_unindexed_module(context.name)
+def fetch(arg):
+	if arg == 'all':
+		for name in storage.remote_module_names():
+			fetch(name)
+	elif arg.find('.git') >= 0:
+		storage.fetch_unindexed_module(arg)
 	else:
-		storage.fetch_module(context.name)
+		storage.fetch_module(arg)
 
 
 # Deletes module with given name from local index.
-def remove(context):
-	storage.clear_module(context.name)
+def remove(path):
+	print 'removing', path
+	if path.find(storage.modules) == 0:
+		name = path.split('/')[-1]
+		storage.clear_module(name)
+	else:
+		shutil.rmtree(path, ignore_errors=True)
 
 
 # Sets up boilerplate project structure.
-def init(context):
+def init(path):
+	wd = os.getcwd()
+	os.chdir(path)
 	os.makedirs('documentation')
 	os.makedirs('sources')
 	os.makedirs('tests')
@@ -61,23 +79,24 @@ def init(context):
 			''')
 	with open('.gitignore', 'w') as f:
 		f.write('build\n')
+	os.chdir(wd)
+
 
 
 # If building an application, its executable is made available 
-# globally. Otherwise, the library is placed in the local index.
-def install(context):
-	build(None)
-	name = os.path.abspath('.').split('/')[-1]
-	if os.path.exists('sources/main.c'):
+# globally. Regardless, the library is placed in the local index.
+def install(path): # TODO: appears to be broken
+	build(path)
+	name = os.path.abspath(path).split('/')[-1]
+	if scanner.has_main(path):
 		shutil.copy('build/bin/' + name, '/usr/local/bin/' + name)
-	else:
-		dest = storage.module_path(name)
-		shutil.copytree('.', dest)
-		storage.index(name, 'none')
+	dest = storage.module_path(name)
+	shutil.copytree(path, dest)
+	storage.index(name, 'none')
 
 
 # Lists available modules (both local and remote).
-def modules(context):
+def modules(arg):
 	local = storage.local_modules()
 	print 'local:  (' + str(len(local)) + ')'
 	for m in local:
@@ -86,28 +105,36 @@ def modules(context):
 		else:
 			print ' - ' + m[0], '[' + utility.color('not compiled', 'red') + ']'
 
-	if context.local:
-		return
-
-	remote = storage.remote_modules()
-	print '\nremote:  (' + str(len(remote)) + ')'
-	for m in remote:
-		print ' -', m[0], '[' + utility.color(m[1], 'yellow') + ']'
+	if arg == 'all':
+		remote = storage.remote_modules()
+		print '\nremote:  (' + str(len(remote)) + ')'
+		for m in remote:
+			print ' -', m[0], '[' + utility.color(m[1], 'yellow') + ']'
 
 
 # Builds and runs generated executable.
-def run(context):
-	build(None)
-	name = os.getcwd().split('/')[-1]
-	os.execv('build/bin/' + name, context.args)
+def run(path):
+	build(path)
+	name = output_name(path)
+	subprocess.call(path + '/build/bin/' + name)
 
 
 # Builds target and runs its tests.
-def test(context):
-	build(None)
-	os.execv('build/bin/tests', [''])
+def test(path):
+	build(path)
+	subprocess.call(path + '/build/bin/tests')
 
 
 # Hack.
-def execute(context):
-	globals()[context.command](context)
+def execute(command, argument):
+	if command in ['fetch', 'modules']:
+		globals()[command](argument)
+	elif argument == 'all':
+		print ' - detected ALL'
+		for module in storage.local_module_names():
+			execute(command, module)
+	else:
+		path = os.path.abspath('.')
+		if argument:
+			path = storage.module_path(argument)
+		globals()[command](path)

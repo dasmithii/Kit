@@ -103,7 +103,7 @@ def make(path):
 	os.chdir('build')
 	c1 = os.system('cmake -Wno-dev .. > /dev/null')
 	c2 = os.system('make > /dev/null')
-	# os.system('rm ../CMakeLists.txt')
+	os.system('rm ../CMakeLists.txt')
 	os.chdir(wd)
 	if c1 == 0 and c2 == 0:
 		print utility.color(' - build successfull', 'green')

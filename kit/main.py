@@ -1,29 +1,42 @@
 import sys
-import argparse
 import commands
+import utility
 
-parser = argparse.ArgumentParser()
-subs = parser.add_subparsers(dest='command')
 
-subs.add_parser('build', help='compile executable/library')
-subs.add_parser('clean', help='erase build products')
-subs.add_parser('dist', help='generate C project without dependencies on kit')
-subs.add_parser('fetch', help='download module from remote index').add_argument('name', action='store')
-subs.add_parser('remove', help='deletes module from local index').add_argument('name', action='store')
-subs.add_parser('init', help='initialize project structure')
-subs.add_parser('install', help='register project in local index')
-subs.add_parser('modules', help='list available modules').add_argument('-l', '--local', help='display local modules only', action='store_true', default=False)
-subs.add_parser('run', help='compile and run executable')
-subs.add_parser('test', help='run tests for given module, defaulting to current')
+usage = '''
+	Kit, a project manager for C/C++
+	--------------------------------
 
+	- usage:
+	          kit <command> [all|<module>] [flags/options]
+
+	- commands:
+	          build ...... compile all sources
+	          clean ...... remove compilation products
+	          dist ....... generate kit-independent project
+	          fetch ...... fetch from central or remote repository
+	          help ....... get more information
+	          remove ..... uninstall module
+	          init ....... prepare new project
+	          install .... make available globally
+	          modules .... list available modules
+	          run ........ execute outputted application
+	          test ....... execute unit tests
+'''
 
 
 def run_cli():
-	args = sys.argv[1:]
-	context = parser.parse_args(args)
-	if context.command == 'run':
-		context.args = [sys.argv[0]] + args[1:]
-	commands.execute(context)
+	args = sys.argv
+	if len(args) < 2:
+		print utility.color(' - invalid argument list', 'red')
+	else:
+		com = args[1]
+		arg = args[2] if len(args) > 2 else None
+		if com == 'help':
+			print usage
+		else:
+			commands.execute(com, arg) 
+
 
 if __name__ == '__main__':
 	run_cli()
