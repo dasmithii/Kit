@@ -85,7 +85,7 @@ def init(path):
 
 # If building an application, its executable is made available 
 # globally. Regardless, the library is placed in the local index.
-def install(path): # TODO: appears to be broken
+def install(path):
 	build(path)
 	name = os.path.abspath(path).split('/')[-1]
 	if scanner.has_main(path):
@@ -93,6 +93,8 @@ def install(path): # TODO: appears to be broken
 	dest = storage.module_path(name)
 	shutil.copytree(path, dest)
 	storage.index(name, 'none')
+	execute('clean', name)
+	execute('build', name)
 
 
 # Lists available modules (both local and remote).
