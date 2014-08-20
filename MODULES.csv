@@ -1,3 +1,4 @@
 base, git://github.com/dasmithii/Baseline.git
 greatest, git://github.com/kit-modules/greatest.git
 sds, git://github.com/kit-modules/sds.git
+dyad, git://github.com/kit-modules/dyad.git
