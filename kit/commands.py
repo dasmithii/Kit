@@ -6,6 +6,16 @@ import scanner
 import builder
 import subprocess
 
+HELLO_WORLD = '''#include <stdio.h>
+
+int main()
+{
+    printf("Hello, world!");
+}
+'''
+
+
+
 
 def output_name(path):
     return os.path.abspath(path).split('/')[-1]
@@ -59,23 +69,9 @@ def init(path):
     utility.touch('README.md')
     utility.touch('LICENSE.md')
     with open('sources/main.c', 'w') as f:
-        f.write('''
-			#include <stdio.h>
-
-			int main()
-			{
-				printf("Hello, world!");
-			}
-			''')
+        f.write(HELLO_WORLD)
     with open('tests/main.c', 'w') as f:
-        f.write('''
-			#include <stdio.h>
-
-			int main()
-			{
-				printf("No tests to run.");
-			}
-			''')
+        f.write(HELLO_WORLD)
     with open('.gitignore', 'w') as f:
         f.write('build\n')
     os.chdir(wd)
