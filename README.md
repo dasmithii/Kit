@@ -7,10 +7,7 @@ Kit is a solution to these problems. It provides standardized project structure,
 
 # Installation
 ```
-git clone https://github.com/dasmithii/Kit.git
-cd Kit
-python setup.py install
-cd ..
+pip install git+https://github.com/dasmithii/Kit.git
 ```
 
 
