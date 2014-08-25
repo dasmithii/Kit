@@ -25,6 +25,7 @@ usage = '''
 '''
 
 
+# Main interface.
 def run_cli():
     args = sys.argv
     if len(args) < 2:
@@ -35,7 +36,10 @@ def run_cli():
         if com == 'help':
             print usage
         else:
-            commands.execute(com, arg)
+            try:
+                commands.execute(com, arg)
+            except KeyboardInterrupt:
+                print '\n[kit]: aborting due to keyboard interupt'
 
 
 if __name__ == '__main__':
