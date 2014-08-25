@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 import utility
 import storage
@@ -110,9 +111,9 @@ def modules(arg):
 
 # Builds and runs generated executable.
 def run(path):
-    build(path)
-    name = output_name(path)
-    subprocess.call(path + '/build/bin/' + name)
+    build('.')
+    name = output_name('.')
+    subprocess.call(['./build/bin/' + name] + sys.argv[2:])
 
 
 # Builds target and runs its tests.
