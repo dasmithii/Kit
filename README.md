@@ -9,6 +9,12 @@ Kit is a solution to these problems. It provides standardized project structure,
 ```
 pip install git+https://github.com/dasmithii/Kit.git
 ```
+or, without `pip`:
+```
+git clone https://github.com/dasmithii/Kit
+cd Kit
+python setup.py install
+```
 
 
 
