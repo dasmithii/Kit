@@ -42,7 +42,10 @@ def dist(path):
 def fetch(arg):
     if arg == 'all':
         for name in storage.remote_module_names():
-            fetch(name)
+            if not storage.contains_module(name):
+                fetch(name)
+            else:
+                print ' - module', name, 'is already installed'
     elif arg.find('.git') >= 0:
         storage.fetch_unindexed_module(arg)
     else:

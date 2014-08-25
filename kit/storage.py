@@ -124,10 +124,12 @@ def index(name, url):
 
 # Reverse above operation.
 def unindex(name):
-    mods = filter(lambda t: t[0] != name, local_modules())
+    s = ''
+    for module in local_modules():
+        if module[0] != name:
+            s += ', '.join(module) + '\n'
     with open(module_list, 'w') as f:
-        f.writelines(map(', '.join, mods))
-    print utility.color(' - unindexed module: ' + name, 'green')
+        f.write(s[0:-1])
 
 
 # Check if module is indexed.
@@ -150,9 +152,9 @@ def module_compiled(name):
 # Remove build products.
 def clear_module(name):
     if contains_module(name):
-        print ' - deleted module:', name
         shutil.rmtree(module_path(name))
         unindex(name)
+        print ' - deleted module:', name
 
 
 # Fetches module from someone's personal git repository.
