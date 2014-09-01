@@ -114,9 +114,12 @@ def modules(arg):
 
 # Builds and runs generated executable.
 def run(path):
-    build('.')
-    name = output_name('.')
-    subprocess.call(['./build/bin/' + name] + sys.argv[2:])
+    if scanner.has_main('.'):
+        build('.')
+        name = output_name('.')
+        subprocess.call(['./build/bin/' + name] + sys.argv[2:])
+    else:
+        print utility.color("- ERROR: this project doesn't produce an executable, and thus it cannot be run.", 'red')
 
 
 # Builds target and runs its tests.
