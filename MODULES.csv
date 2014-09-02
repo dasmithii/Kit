@@ -1,5 +1,6 @@
 base, git://github.com/dasmithii/Baseline.git
 dyad, git://github.com/kit-modules/dyad.git
+EventLoop, git://github.com/dasmithii/EventLoop.git
 GCiaB, git://github.com/dasmithii/GCiaB.git
 greatest, git://github.com/kit-modules/greatest.git
 sds, git://github.com/kit-modules/sds.git
