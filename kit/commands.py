@@ -140,4 +140,7 @@ def execute(command, argument):
         path = os.path.abspath('.')
         if argument:
             path = storage.module_path(argument)
-        globals()[command](path)
+        try:
+            globals()[command](path)
+        except:
+            print utility.color(' - ERROR: command not available', 'red')
