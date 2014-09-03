@@ -133,3 +133,23 @@ def has_main(root):
         if os.path.exists(root + '/sources/main.' + ext):
             return True
     return False
+
+
+def recursive_module_dependencies(mod):
+    path = storage.module_path(mod)
+    return recursive_dependencies(path)
+
+
+def recursive_dependencies(path):
+    s1 = Set()
+    s2 = Set(directory_dependencies(path))
+    while len(s1) != len(s2):
+        s1 = s2
+        s2 = Set()
+        for dep in s1:
+            s2.add(dep)
+            s2 |= recursive_module_dependencies(dep)
+    return s2
+
+
+

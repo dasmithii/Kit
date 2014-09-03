@@ -94,8 +94,7 @@ def generate_cmake(root, deps):
             f.write('TARGET_LINK_LIBRARIES(tests ' + dep + ')\n')
             if scanner.has_main(root):
                 f.write('TARGET_LINK_LIBRARIES(' + name + ' ' + dep + ')\n')
-            f.write(
-                'include_directories(' + storage.module_header_path(dep) + ')\n')
+            f.write('include_directories(' + storage.module_header_path(dep) + ')\n')
     print ' - generated CMakeLists.txt'
 
 
@@ -120,7 +119,7 @@ def make(path):
 
 # Compiles libraries and headers for given directory.
 def build_directory(path):
-    deps = scanner.directory_dependencies(path)
+    deps = scanner.recursive_dependencies(path)
     for dep in deps:
         print ' - resolving dependency:', dep
         if not storage.contains_module(dep):
