@@ -98,12 +98,21 @@ def generate_cmake(root, deps):
     print ' - generated CMakeLists.txt'
 
 
+# Performs any commands specified in the metadata file.
+def run_configuration(path):
+    meta = scanner.directory_metadata(path)
+    for command in meta['commands']:
+        os.system(command)
+
+
+
 # Compiles executables and libraries for given project, assuming
 # that all dependencies have been resolved a priori.
 def make(path):
     print ' - running `make`...'
     wd = os.getcwd()
     os.chdir(path)
+    run_configuration(path)
     os.system('mkdir -p build')
     os.chdir('build')
     c1 = os.system('cmake -Wno-dev .. > /dev/null')

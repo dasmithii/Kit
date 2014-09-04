@@ -86,7 +86,7 @@ def module_dependencies(name):
 
 # Parses kit.meta without injecting defaults.
 def directory_metafile_contents(path):
-    path += '/kit..meta'
+    path += '/kit.meta'
     if os.path.exists(path):
         f = open(path, 'r')
         text = f.read()
@@ -114,7 +114,8 @@ def directory_metadata(path):
     data = {
         "author": 'unknown',
         "flags": '',
-        "language": 'C'
+        "language": 'C',
+        "commands": []
     }
     if contains_cpp(path):
         data['language'] += ' CXX'
