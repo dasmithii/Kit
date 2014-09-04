@@ -93,7 +93,7 @@ def directory_metafile_contents(path):
         try:
             return json.loads(text)
         except:
-            print utility.color(" - couldn't parse kit.meta", 'red')
+            print utility.color(" - ERROR: couldn't parse kit.meta", 'red')
             exit(1)
         f.close()
     else:
