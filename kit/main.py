@@ -9,6 +9,7 @@ usage = '''
 
 	- usage:
 	          kit <command> [all|<module>] [flags/options]
+	          kit [flags/options]
 
 	- commands:
 	          build ...... compile all sources
@@ -29,17 +30,16 @@ usage = '''
 def run_cli():
     args = sys.argv
     if len(args) < 2:
-        print utility.color(' - invalid argument list', 'red')
+    	args.append('run')
+    com = args[1]
+    arg = args[2] if len(args) > 2 else None
+    if com == 'help':
+        print usage
     else:
-        com = args[1]
-        arg = args[2] if len(args) > 2 else None
-        if com == 'help':
-            print usage
-        else:
-            try:
-                commands.execute(com, arg)
-            except KeyboardInterrupt:
-                print '\n[kit]: aborting due to keyboard interupt'
+        try:
+            commands.execute(com, arg)
+        except KeyboardInterrupt:
+            print '\n[kit]: aborting due to keyboard interupt'
 
 
 if __name__ == '__main__':
