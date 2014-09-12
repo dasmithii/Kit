@@ -1,4 +1,5 @@
 base, git://github.com/dasmithii/Baseline.git
+coroutine, git://github.com/dasmithii/Coroutine.git
 dyad, git://github.com/kit-modules/dyad.git
 EventLoop, git://github.com/dasmithii/EventLoop.git
 GCiaB, git://github.com/dasmithii/GCiaB.git

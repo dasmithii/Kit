@@ -84,12 +84,12 @@ def init(path):
 # If building an application, its executable is made available
 # globally. Regardless, the library is placed in the local index.
 def install(path):
-    build(path)
-    name = os.path.abspath(path).split('/')[-1]
-    if scanner.has_main(path):
+    build('.')
+    name = os.path.abspath('.').split('/')[-1]
+    if scanner.has_main('.'):
         shutil.copy('build/bin/' + name, '/usr/local/bin/' + name)
     dest = storage.module_path(name)
-    shutil.copytree(path, dest)
+    shutil.copytree('.', dest)
     storage.index(name, 'none')
     execute('clean', name)
     execute('build', name)
