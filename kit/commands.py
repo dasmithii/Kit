@@ -7,11 +7,26 @@ import scanner
 import builder
 import subprocess
 
-HELLO_WORLD = '''#include <stdio.h>
+DEFAULT_APP_CODE = '''
+#include <stdio.h>
+
 
 int main()
 {
     printf("Hello, world!");
+}
+'''
+
+
+DEFAULT_TEST_CODE = '''
+#include <kit/greatest.h>
+
+
+GREATEST_MAIN_DEFS();
+int main(int argc, char *argv[]) {
+    GREATEST_MAIN_BEGIN();   
+    GREATEST_MAIN_END();
+    return 0;
 }
 '''
 
@@ -73,9 +88,9 @@ def init(path):
     utility.touch('README.md')
     utility.touch('LICENSE.md')
     with open('sources/main.c', 'w') as f:
-        f.write(HELLO_WORLD)
+        f.write(DEFAULT_APP_CODE)
     with open('tests/main.c', 'w') as f:
-        f.write(HELLO_WORLD)
+        f.write(DEFAULT_TEST_CODE)
     with open('.gitignore', 'w') as f:
         f.write('build\n')
     os.chdir(wd)
