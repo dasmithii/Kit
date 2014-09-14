@@ -35,9 +35,7 @@ def prepare_headers(name):
 
 # Ensure that module is compiled.
 def ready_indexed_module(name):
-    if storage.module_compiled(name):
-        print utility.color(' - already compiled', 'green')
-    else:
+    if not storage.module_compiled(name):
         path = storage.module_path(name)
         build_directory(path)
         prepare_headers(name)
@@ -130,7 +128,7 @@ def make(path):
 def build_directory(path):
     deps = scanner.recursive_dependencies(path)
     for dep in deps:
-        print ' - resolving dependency:', dep
+        # print ' - resolving dependency:', dep
         if not storage.contains_module(dep):
             if storage.remote_contains_module(dep):
                 storage.fetch_module(dep)

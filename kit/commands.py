@@ -69,7 +69,6 @@ def fetch(arg):
 
 # Deletes module with given name from local index.
 def remove(path):
-    print 'removing', path
     if path.find(storage.modules) == 0:
         name = path.split('/')[-1]
         storage.clear_module(name)
@@ -148,7 +147,6 @@ def execute(command, argument):
     if command in ['fetch', 'modules']:
         globals()[command](argument)
     elif argument == 'all':
-        print ' - detected ALL'
         for module in storage.local_module_names():
             execute(command, module)
     else:
