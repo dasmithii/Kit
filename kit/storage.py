@@ -69,7 +69,7 @@ def remote_modules():
         index = urllib.urlopen(remote_index_url)
         return module_tuples(index.read())
     except:
-        print utility.color(' - failed to retrieve remote index', 'red')
+        print utility.color(' - failed to retrieve remote index (no connection?)', 'red')
         return []
 
 
@@ -80,10 +80,11 @@ def remote_module_names():
 # Fetches git repository of module with given name in central
 # index.
 def remote_resolve(name):
-    mods = filter(lambda t: t[0] == name, remote_modules())[0]
-    if len(mods) > 0:
-        return mods[1]
-    raise "couldn't resolve module with name " + name
+    matches = filter(lambda t: t[0] == name, remote_modules())
+    if len(matches) > 0:
+        return mods[0][1]
+    print utility.color(' - failed to resolve module: ' + name, 'red')
+
 
 
 # Path to module in central index.
@@ -120,6 +121,7 @@ def index(name, url):
     with open(module_list, 'a') as f:
         f.write('\n' + name + ', ' + url)
     print utility.color(' - indexed module: ' + name, 'green')
+    quit()
 
 
 # Reverse above operation.
