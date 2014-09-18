@@ -82,7 +82,7 @@ def remote_module_names():
 def remote_resolve(name):
     matches = filter(lambda t: t[0] == name, remote_modules())
     if len(matches) > 0:
-        return mods[0][1]
+        return matches[0][1]
     print utility.color(' - failed to resolve module: ' + name, 'red')
 
 
