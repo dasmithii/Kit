@@ -121,7 +121,6 @@ def index(name, url):
     with open(module_list, 'a') as f:
         f.write('\n' + name + ', ' + url)
     print utility.color(' - indexed module: ' + name, 'green')
-    quit()
 
 
 # Reverse above operation.
