@@ -38,23 +38,22 @@ def output_name(path):
 
 
 # Deletes on compilation products.
-def clean(path):
+def clean(path,options):
     shutil.rmtree(path + '/build', ignore_errors=True)
 
-
 # Compiles directory.
-def build(path):
-    builder.build_directory(path)
+def build(path,options):
+    builder.build_directory(path,options)
 
 
 # Geneerates a self-contained C project [which doesn't depend
 # on kit] and places it in build/dist.
-def dist(path):
+def dist(path,options):
     print utility.color('TODO: command `dist` has not yet been implemented', 'red')
 
 
 # Attempts to clone repository from remote index.
-def fetch(arg):
+def fetch(arg,options):
     if arg == 'all':
         for name in storage.remote_module_names():
             if not storage.contains_module(name):
@@ -68,7 +67,7 @@ def fetch(arg):
 
 
 # Deletes module with given name from local index.
-def remove(path):
+def remove(path,options):
     if path.find(storage.modules) == 0:
         name = path.split('/')[-1]
         storage.clear_module(name)
@@ -77,7 +76,7 @@ def remove(path):
 
 
 # Sets up boilerplate project structure.
-def init(path):
+def init(path,options):
     wd = os.getcwd()
     os.chdir(path)
     os.makedirs('documentation')
@@ -97,7 +96,7 @@ def init(path):
 
 # If building an application, its executable is made available
 # globally. Regardless, the library is placed in the local index.
-def install(path):
+def install(path,options):
     build('.')
     name = os.path.abspath('.').split('/')[-1]
     if scanner.has_main('.'):
@@ -110,7 +109,7 @@ def install(path):
 
 
 # Lists available modules (both local and remote).
-def modules(arg):
+def modules(arg,options):
     local = storage.local_modules()
     print 'local:  (' + str(len(local)) + ')'
     for m in local:
@@ -127,7 +126,7 @@ def modules(arg):
 
 
 # Builds and runs generated executable.
-def run(path):
+def run(path,options):
     if scanner.has_main('.'):
         build('.')
         name = output_name('.')
@@ -137,13 +136,13 @@ def run(path):
 
 
 # Builds target and runs its tests.
-def test(path):
-    build(path)
+def test(path,options):
+    build(path,options)
     subprocess.call(path + '/build/bin/tests')
 
 
 # Hack.
-def execute(command, argument):
+def execute(command, argument,options):
     if command in ['fetch', 'modules']:
         globals()[command](argument)
     elif argument == 'all':
@@ -154,6 +153,6 @@ def execute(command, argument):
         if argument:
             path = storage.module_path(argument)
         if command in globals():
-            globals()[command](path)
+            globals()[command](path,options)
         else:
             print utility.color(' - ERROR: command not available', 'red')

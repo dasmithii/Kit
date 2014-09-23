@@ -1,6 +1,7 @@
 import sys
 import commands
 import utility
+import argparse
 
 
 usage = '''
@@ -28,16 +29,24 @@ usage = '''
 
 # Main interface.
 def run_cli():
-    args = sys.argv
-    if len(args) < 2:
+    parser = argparse.ArgumentParser(usage)
+    parser.add_argument("--save-cmake",dest="save_cmake",action="store_true")
+    parser.add_argument("--verbose",dest="verbose",action="store_true")
+    parser.add_argument("args",nargs="+")
+    args_and_options = parser.parse_args()
+    args = args_and_options.args
+    options = {"verbose":args_and_options.verbose,
+               "save-cmake":args_and_options.save_cmake}
+
+    if len(args) == 0:
     	args.append('run')
-    com = args[1]
-    arg = args[2] if len(args) > 2 else None
+    com = args[0]
+    arg = args[1] if len(args) > 1 else None
     if com == 'help':
         print usage
     else:
         try:
-            commands.execute(com, arg)
+            commands.execute(com, arg,options)
         except KeyboardInterrupt:
             print '\n[kit]: aborting due to keyboard interupt'
 
