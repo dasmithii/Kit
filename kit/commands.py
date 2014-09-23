@@ -38,22 +38,22 @@ def output_name(path):
 
 
 # Deletes on compilation products.
-def clean(path,options):
+def clean(path,options=None):
     shutil.rmtree(path + '/build', ignore_errors=True)
 
 # Compiles directory.
-def build(path,options):
+def build(path,options=None):
     builder.build_directory(path,options)
 
 
 # Geneerates a self-contained C project [which doesn't depend
 # on kit] and places it in build/dist.
-def dist(path,options):
+def dist(path,options=None):
     print utility.color('TODO: command `dist` has not yet been implemented', 'red')
 
 
 # Attempts to clone repository from remote index.
-def fetch(arg,options):
+def fetch(arg,options=None):
     if arg == 'all':
         for name in storage.remote_module_names():
             if not storage.contains_module(name):
@@ -67,7 +67,7 @@ def fetch(arg,options):
 
 
 # Deletes module with given name from local index.
-def remove(path,options):
+def remove(path,options=None):
     if path.find(storage.modules) == 0:
         name = path.split('/')[-1]
         storage.clear_module(name)
@@ -76,7 +76,7 @@ def remove(path,options):
 
 
 # Sets up boilerplate project structure.
-def init(path,options):
+def init(path,options=None):
     wd = os.getcwd()
     os.chdir(path)
     os.makedirs('documentation')
@@ -96,7 +96,7 @@ def init(path,options):
 
 # If building an application, its executable is made available
 # globally. Regardless, the library is placed in the local index.
-def install(path,options):
+def install(path,options=None):
     build('.')
     name = os.path.abspath('.').split('/')[-1]
     if scanner.has_main('.'):
@@ -109,7 +109,7 @@ def install(path,options):
 
 
 # Lists available modules (both local and remote).
-def modules(arg,options):
+def modules(arg,options=None):
     local = storage.local_modules()
     print 'local:  (' + str(len(local)) + ')'
     for m in local:
@@ -126,7 +126,7 @@ def modules(arg,options):
 
 
 # Builds and runs generated executable.
-def run(path,options):
+def run(path,options=None):
     if scanner.has_main('.'):
         build('.')
         name = output_name('.')
@@ -136,15 +136,15 @@ def run(path,options):
 
 
 # Builds target and runs its tests.
-def test(path,options):
+def test(path,options=None):
     build(path,options)
     subprocess.call(path + '/build/bin/tests')
 
 
 # Hack.
-def execute(command, argument,options):
+def execute(command, argument,options=None):
     if command in ['fetch', 'modules']:
-        globals()[command](argument)
+        globals()[command](argument,options)
     elif argument == 'all':
         for module in storage.local_module_names():
             execute(command, module)
