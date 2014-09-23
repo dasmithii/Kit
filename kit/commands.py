@@ -152,6 +152,9 @@ def execute(command, argument,options=None):
         path = os.path.abspath('.')
         if argument:
             path = storage.module_path(argument)
+        elif command == 'remove':
+            print utility.color("- ERROR: remove command cannot be run without module name",'red')
+            exit(1)
         if command in globals():
             globals()[command](path,options)
         else:
