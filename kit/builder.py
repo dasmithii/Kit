@@ -106,7 +106,9 @@ def run_configuration(path):
 
 # Compiles executables and libraries for given project, assuming
 # that all dependencies have been resolved a priori.
-def make(path):
+def make(path,options=None):
+    if options is None:
+        options = {}
     print ' - running `make`...'
     wd = os.getcwd()
     os.chdir(path)
@@ -114,8 +116,12 @@ def make(path):
     os.system('mkdir -p build')
     os.chdir('build')
     c1 = os.system('cmake -Wno-dev .. > /dev/null')
-    c2 = os.system('make > /dev/null')
-    os.system('rm ../CMakeLists.txt')
+    if "verbose" in options and options["verbose"]:
+        c2 = os.system('make VERBOSE=1')
+    else:
+        c2 = os.system('make > /dev/null')
+    if not "save-cmake" in options or (not options["save-cmake"]):
+        os.system('rm ../CMakeLists.txt')
     os.chdir(wd)
     if c1 == 0 and c2 == 0:
         print utility.color(' - build successfull', 'green')
@@ -125,7 +131,7 @@ def make(path):
 
 
 # Compiles libraries and headers for given directory.
-def build_directory(path):
+def build_directory(path,options=None):
     deps = scanner.recursive_dependencies(path)
     for dep in deps:
         # print ' - resolving dependency:', dep
@@ -138,4 +144,4 @@ def build_directory(path):
                 exit(1)
         ready_indexed_module(dep)
     generate_cmake(path, deps)
-    make(path)
+    make(path,options)
