@@ -32,7 +32,7 @@ def run_cli():
     parser = argparse.ArgumentParser(usage)
     parser.add_argument("--save-cmake",dest="save_cmake",action="store_true")
     parser.add_argument("--verbose",dest="verbose",action="store_true")
-    parser.add_argument("args",nargs="+")
+    parser.add_argument("args",nargs="*")
     args_and_options = parser.parse_args()
     args = args_and_options.args
     options = {"verbose":args_and_options.verbose,
