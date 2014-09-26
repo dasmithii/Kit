@@ -116,11 +116,11 @@ def make(path,options=None):
     os.system('mkdir -p build')
     os.chdir('build')
     c1 = os.system('cmake -Wno-dev .. > /dev/null')
-    if "verbose" in options and options["verbose"]:
+    if "verbose" in options:
         c2 = os.system('make VERBOSE=1')
     else:
         c2 = os.system('make > /dev/null')
-    if not "save-cmake" in options or (not options["save-cmake"]):
+    if not "save-cmake" in options:
         os.system('rm ../CMakeLists.txt')
     os.chdir(wd)
     if c1 == 0 and c2 == 0:

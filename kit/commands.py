@@ -40,6 +40,10 @@ def output_name(path):
 # Deletes on compilation products.
 def clean(path):
     shutil.rmtree(path + '/build', ignore_errors=True)
+    try:
+        os.remove(path + '/CMakeLists.txt')
+    except OSError:
+        pass
 
 # Compiles directory.
 def build(path, options=None):
@@ -142,7 +146,7 @@ def test(path):
 
 
 # Hack.
-def execute(command, argument, options=None):
+def execute(command, argument, options):
     if command == 'build':
         build(argument, options)
     elif command in ['fetch', 'modules']:
