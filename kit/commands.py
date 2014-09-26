@@ -38,22 +38,22 @@ def output_name(path):
 
 
 # Deletes on compilation products.
-def clean(path,options=None):
+def clean(path):
     shutil.rmtree(path + '/build', ignore_errors=True)
 
 # Compiles directory.
-def build(path,options=None):
+def build(path, options=None):
+    if not path:
+        path = '.'
     builder.build_directory(path,options)
-
 
 # Geneerates a self-contained C project [which doesn't depend
 # on kit] and places it in build/dist.
-def dist(path,options=None):
+def dist(path):
     print utility.color('TODO: command `dist` has not yet been implemented', 'red')
 
-
 # Attempts to clone repository from remote index.
-def fetch(arg,options=None):
+def fetch(arg):
     if arg == 'all':
         for name in storage.remote_module_names():
             if not storage.contains_module(name):
@@ -67,7 +67,7 @@ def fetch(arg,options=None):
 
 
 # Deletes module with given name from local index.
-def remove(path,options=None):
+def remove(path):
     if path.find(storage.modules) == 0:
         name = path.split('/')[-1]
         storage.clear_module(name)
@@ -76,7 +76,7 @@ def remove(path,options=None):
 
 
 # Sets up boilerplate project structure.
-def init(path,options=None):
+def init(path):
     wd = os.getcwd()
     os.chdir(path)
     os.makedirs('documentation')
@@ -96,7 +96,7 @@ def init(path,options=None):
 
 # If building an application, its executable is made available
 # globally. Regardless, the library is placed in the local index.
-def install(path,options=None):
+def install(path):
     build('.')
     name = os.path.abspath('.').split('/')[-1]
     if scanner.has_main('.'):
@@ -109,7 +109,7 @@ def install(path,options=None):
 
 
 # Lists available modules (both local and remote).
-def modules(arg,options=None):
+def modules(arg):
     local = storage.local_modules()
     print 'local:  (' + str(len(local)) + ')'
     for m in local:
@@ -126,7 +126,7 @@ def modules(arg,options=None):
 
 
 # Builds and runs generated executable.
-def run(path,options=None):
+def run(path):
     if scanner.has_main('.'):
         build('.')
         name = output_name('.')
@@ -136,15 +136,17 @@ def run(path,options=None):
 
 
 # Builds target and runs its tests.
-def test(path,options=None):
-    build(path,options)
+def test(path):
+    build(path)
     subprocess.call(path + '/build/bin/tests')
 
 
 # Hack.
-def execute(command, argument,options=None):
-    if command in ['fetch', 'modules']:
-        globals()[command](argument,options)
+def execute(command, argument, options=None):
+    if command == 'build':
+        build(argument, options)
+    elif command in ['fetch', 'modules']:
+        globals()[command](argument)
     elif argument == 'all':
         for module in storage.local_module_names():
             execute(command, module)
@@ -156,6 +158,6 @@ def execute(command, argument,options=None):
             print utility.color("- ERROR: remove command cannot be run without module name",'red')
             exit(1)
         if command in globals():
-            globals()[command](path,options)
+            globals()[command](path)
         else:
             print utility.color(' - ERROR: command not available', 'red')

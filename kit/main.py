@@ -46,7 +46,7 @@ def run_cli():
         print usage
     else:
         try:
-            commands.execute(com, arg,options)
+            commands.execute(com, arg, options)
         except KeyboardInterrupt:
             print '\n[kit]: aborting due to keyboard interupt'
 
