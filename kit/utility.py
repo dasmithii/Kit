@@ -6,11 +6,8 @@ def files_under(directory):
     ret = []
     for root, dirs, files in os.walk(directory):
         for path in files:
-            path = root + '/' + '/'.join(dirs) + '/' + path
-            path = path.replace('//', '/')
-            ret.append(path)
+            ret.append(os.path.join(root, path))
     return ret
-
 
 # Gathers .c files recursively.
 def sources_under(directory):
