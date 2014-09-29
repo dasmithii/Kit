@@ -3,7 +3,7 @@ import shutil
 import storage
 import scanner
 import utility
-
+import re
 
 # Copies headers in module to build/headers/name, dropping one
 # directory layer (i.e. name/sources/header.h => name/header.h)
@@ -74,7 +74,7 @@ def generate_cmake(root, deps):
                 'add_executable(' + name + ' "' + '" "'.join(files) + '")\n')
 
         # Build module as static library.
-        files = filter(lambda s: s.find('main.') == -1, headers + sources)
+        files = filter(lambda s: re.search('/main\.(c|cpp|h)',s) is None, headers + sources)
         if len(files) > 0:
             f.write(
                 'add_library(' + name + '_static STATIC "' + '" "'.join(files) + '")\n')
