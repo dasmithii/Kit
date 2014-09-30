@@ -6,6 +6,7 @@ import storage
 import scanner
 import builder
 import subprocess
+import platform
 
 DEFAULT_APP_CODE = '''
 #include <stdio.h>
@@ -142,7 +143,15 @@ def run(path):
 # Builds target and runs its tests.
 def test(path,options):
     build(path,options)
-    subprocess.call(path + '/build/bin/tests')
+    args = [path + '/build/bin/tests']
+    if 'debug' in options:
+        if "Darwin" in platform.platform():
+            args = ["lldb"] + args 
+        else:
+            args = ["gdb"] + args 
+    if 'verbose' in options:
+        print command_string
+    subprocess.call(args)
 
 
 # Hack.
