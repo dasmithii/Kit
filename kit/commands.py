@@ -140,8 +140,8 @@ def run(path):
 
 
 # Builds target and runs its tests.
-def test(path):
-    build(path)
+def test(path,options):
+    build(path,options)
     subprocess.call(path + '/build/bin/tests')
 
 
@@ -161,7 +161,9 @@ def execute(command, argument, options):
         elif command == 'remove':
             print utility.color("- ERROR: remove command cannot be run without module name",'red')
             exit(1)
-        if command in globals():
+        elif command == 'test':
+            test(path, options)
+        elif command in globals():
             globals()[command](path)
         else:
             print utility.color(' - ERROR: command not available', 'red')
