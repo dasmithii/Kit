@@ -6,6 +6,7 @@ import storage
 import scanner
 import builder
 import subprocess
+import platform
 
 DEFAULT_APP_CODE = '''
 #include <stdio.h>
@@ -140,9 +141,17 @@ def run(path):
 
 
 # Builds target and runs its tests.
-def test(path):
-    build(path)
-    subprocess.call(path + '/build/bin/tests')
+def test(path,options):
+    build(path,options)
+    args = [path + '/build/bin/tests']
+    if 'debug' in options:
+        if "Darwin" in platform.platform():
+            args = ["lldb"] + args 
+        else:
+            args = ["gdb"] + args 
+    if 'verbose' in options:
+        print command_string
+    subprocess.call(args)
 
 
 # Hack.
@@ -161,7 +170,9 @@ def execute(command, argument, options):
         elif command == 'remove':
             print utility.color("- ERROR: remove command cannot be run without module name",'red')
             exit(1)
-        if command in globals():
+        elif command == 'test':
+            test(path, options)
+        elif command in globals():
             globals()[command](path)
         else:
             print utility.color(' - ERROR: command not available', 'red')

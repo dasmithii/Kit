@@ -28,7 +28,8 @@ usage = '''
 
 option_table = {
     'v': 'verbose',
-    's': 'save-cmake'
+    's': 'save-cmake',
+    'd': 'debug'
 }
 
 def is_option(s):
@@ -53,6 +54,7 @@ def run_cli():
     opts = map(parse_option, filter(is_option, argv))
     com = args[0] if len(args) > 0 else 'run'
     arg = args[1] if len(args) > 1 else None
+
     if com == 'help':
         print usage
     else:

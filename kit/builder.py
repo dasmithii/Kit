@@ -43,8 +43,8 @@ def ready_indexed_module(name):
 
 
 # Generates CMakeLists file for project. This should be removed after
-# compilation.
-def generate_cmake(root, deps):
+# compilation, unless the user explicitly requests saving it
+def generate_cmake(root, deps,options=None):
     name = os.path.abspath(root).split('/')[-1]
     meta = scanner.directory_metadata(root)
     with open(root + '/CMakeLists.txt', 'w') as f:
@@ -57,6 +57,10 @@ def generate_cmake(root, deps):
             'set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
         f.write(
             'set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)\n')
+
+        if (not options is None) and ('debug' in options):
+            f.write('SET(CMAKE_BUILD_TYPE Debug)\n')
+
         if meta['language'] == 'C':
             f.write('SET(CMAKE_C_FLAGS  "' + meta['flags'] + '")\n')
         else:
@@ -108,7 +112,7 @@ def run_configuration(path):
 # that all dependencies have been resolved a priori.
 def make(path,options=None):
     if options is None:
-        options = {}
+        options = []
     print ' - running `make`...'
     wd = os.getcwd()
     os.chdir(path)
@@ -143,5 +147,5 @@ def build_directory(path,options=None):
                 print utility.color(' - build failed', 'red')
                 exit(1)
         ready_indexed_module(dep)
-    generate_cmake(path, deps)
+    generate_cmake(path, deps,options)
     make(path,options)
