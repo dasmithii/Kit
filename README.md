@@ -1,5 +1,5 @@
 # Overview
-In contrast with many modern languages, C has no central authority of project management. From basic directory structure to build tools, everything seems fragmented. More so, libraries are inaccessibly scattered across the web - and that pressures developers to reinvent the wheel over and over again.
+In contrast with many modern languages, C has no standardized systems of module distribution, dependency handling, or project management management in general. From basic directory structure to build tools, everything seems fragmented. More so, libraries are inaccessibly scattered across the web - and that pressures developers to reinvent the wheel over and over again.
 
 Kit is a solution to these problems. It provides standardized project structure, centralized module indexing, and a convenient build tool [which wraps CMake, capitalizing on standardization].
 
