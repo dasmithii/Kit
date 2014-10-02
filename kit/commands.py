@@ -7,6 +7,7 @@ import scanner
 import builder
 import subprocess
 import platform
+from subprocess import Popen, PIPE
 
 DEFAULT_APP_CODE = '''
 #include <stdio.h>
@@ -135,7 +136,8 @@ def run(path):
     if scanner.has_main('.'):
         build('.')
         name = output_name('.')
-        subprocess.call(['./build/bin/' + name] + sys.argv[2:])
+        r = subprocess.call(['./build/bin/' + name] + sys.argv[2:])
+        exit(r)
     else:
         print utility.color("- ERROR: this project doesn't produce an executable, and thus it cannot be run.", 'red')
 
@@ -151,27 +153,19 @@ def test(path,options):
             args = ["gdb"] + args 
     if 'verbose' in options:
         print command_string
-    subprocess.call(args)
+    r = subprocess.call(args)
+    exit(r)
 
 
 # Hack.
 def execute(command, argument, options):
-    if command == 'build':
-        build(argument, options)
-    elif command in ['fetch', 'modules']:
-        globals()[command](argument)
-    elif argument == 'all':
+    if argument == 'all':
         for module in storage.local_module_names():
-            execute(command, module)
+            execute(command, module, None)
     else:
-        path = os.path.abspath('.')
-        if argument:
-            path = storage.module_path(argument)
-        elif command == 'remove':
-            print utility.color("- ERROR: remove command cannot be run without module name",'red')
-            exit(1)
-        elif command == 'test':
-            test(path, options)
+        path = storage.module_path(argument) if argument else os.path.abspath('.')
+        if command in ['test', 'build']:
+            globals()[command](path, options)
         elif command in globals():
             globals()[command](path)
         else:
