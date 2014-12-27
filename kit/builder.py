@@ -88,7 +88,7 @@ def generate_cmake(root, deps,options=None):
         files += test_sources
         f.write('add_executable(tests "' + '" "'.join(files) + '")\n')
 
-        # Link against compiled dendencies.
+        # Link against compiled dependencies.
         for dep in deps:
             f.write('add_library(' + dep + ' STATIC IMPORTED)\n')
             f.write(
