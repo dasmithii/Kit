@@ -53,7 +53,7 @@ def build(path, options=None):
         path = '.'
     builder.build_directory(path,options)
 
-# Geneerates a self-contained C project [which doesn't depend
+# Generates a self-contained C project [which doesn't depend
 # on kit] and places it in build/dist.
 def dist(path):
     print utility.color('TODO: command `dist` has not yet been implemented', 'red')
